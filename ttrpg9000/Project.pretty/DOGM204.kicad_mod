@@ -68,6 +68,39 @@
 	)
 	(attr through_hole)
 	(fp_rect
+		(start -1.016 -39.116)
+		(end 54.356 -37.084)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "F.CrtYd")
+		(uuid "c748c072-7915-4f97-82a9-524d7f0a7a65")
+	)
+	(fp_rect
+		(start -1.016 -1.016)
+		(end 6.096 1.016)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "F.CrtYd")
+		(uuid "4b4c31c0-8b85-49a8-a579-7cbdde638cdb")
+	)
+	(fp_rect
+		(start 47.244 -1.016)
+		(end 54.356 1.016)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "F.CrtYd")
+		(uuid "a7ae9b41-df95-40b5-9250-ff4a720726fc")
+	)
+	(fp_rect
 		(start -6.33 -38.1)
 		(end 59.67 0)
 		(stroke
@@ -75,19 +108,8 @@
 			(type default)
 		)
 		(fill none)
-		(layer "F.SilkS")
+		(layer "F.Fab")
 		(uuid "17df3064-4845-498e-af9a-8f62cd2e562f")
-	)
-	(fp_rect
-		(start -6.604 -38.354)
-		(end 59.944 0.254)
-		(stroke
-			(width 0.05)
-			(type default)
-		)
-		(fill none)
-		(layer "F.CrtYd")
-		(uuid "18a10584-cee1-4cc4-9d6e-3f7da0ceed6b")
 	)
 	(fp_text user "${REFERENCE}"
 		(at 25.4 -18.82 0)
