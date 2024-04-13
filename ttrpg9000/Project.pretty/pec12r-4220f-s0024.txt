@@ -1,0 +1,10 @@
+﻿"Symbol";"Value";"Unit";
+"TraceParts.PartNumber";"90-13062022-064178";"";
+"REFERENCE";"PEC12R-4220F-S0024";"";
+"TraceParts.PartTitle";"Incremental encoder 24 detents 24 pulses";"";
+"TraceParts.InstanceId";"90-13062022-0641782N3XX9WWY2MK673V115V3T3RA";"";
+"SUPPLIER";"BOURNS";"";
+"DESIGN";"Incremental encoder 24 detents 24 pulses";"";
+"TRACEPARTS";"TRACEPARTS";"";
+"TraceParts.PartLanguage";"en";"";
+"TraceParts.PartVersion";"1.0.1";"";
