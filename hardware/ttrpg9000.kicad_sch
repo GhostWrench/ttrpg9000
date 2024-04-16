@@ -2780,6 +2780,12 @@
 		(uuid "972afd2a-7b8b-441c-a0d3-2c1804fa52c3")
 	)
 	(junction
+		(at 82.55 36.83)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "981385f5-9546-4e3b-8b8f-dbb1e054e4c9")
+	)
+	(junction
 		(at 171.45 52.07)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2844,16 +2850,22 @@
 		(uuid "29874310-fbf8-44e4-96c7-98dfdfb0fcb1")
 	)
 	(no_connect
-		(at 67.31 49.53)
-		(uuid "7e40dc00-518e-47f7-8383-abbdbb5fccea")
-	)
-	(no_connect
 		(at 67.31 54.61)
 		(uuid "a15d5e96-e098-4ca3-a8a4-b36fe89ca1ee")
 	)
 	(no_connect
 		(at 97.79 87.63)
 		(uuid "f1b8730c-aae4-483d-8b8c-20e929a18b21")
+	)
+	(wire
+		(pts
+			(xy 64.77 46.99) (xy 64.77 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "00758e84-a88d-4bfa-bcd6-a3b6083bc352")
 	)
 	(wire
 		(pts
@@ -3477,6 +3489,16 @@
 	)
 	(wire
 		(pts
+			(xy 64.77 39.37) (xy 64.77 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6f054a99-1902-444c-8a86-936f4e78fe3b")
+	)
+	(wire
+		(pts
 			(xy 139.7 133.35) (xy 143.51 133.35)
 		)
 		(stroke
@@ -3817,6 +3839,16 @@
 	)
 	(wire
 		(pts
+			(xy 82.55 36.83) (xy 82.55 41.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a32c75fe-b455-4def-aa23-7054d9868571")
+	)
+	(wire
+		(pts
 			(xy 151.13 133.35) (xy 153.67 133.35)
 		)
 		(stroke
@@ -4037,6 +4069,16 @@
 	)
 	(wire
 		(pts
+			(xy 64.77 36.83) (xy 82.55 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c9f77640-1391-47fd-ba2f-d5d789a840c1")
+	)
+	(wire
+		(pts
 			(xy 146.05 57.15) (xy 163.83 57.15)
 		)
 		(stroke
@@ -4044,6 +4086,16 @@
 			(type default)
 		)
 		(uuid "cee927f3-f9e8-46ab-ae6f-1c21be51bc29")
+	)
+	(wire
+		(pts
+			(xy 64.77 49.53) (xy 67.31 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cfae7cd0-5567-4483-8087-dbfb446aee02")
 	)
 	(wire
 		(pts
@@ -4097,7 +4149,7 @@
 	)
 	(wire
 		(pts
-			(xy 82.55 39.37) (xy 82.55 41.91)
+			(xy 82.55 34.29) (xy 82.55 36.83)
 		)
 		(stroke
 			(width 0)
@@ -4477,7 +4529,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 82.55 39.37 0)
+		(at 82.55 34.29 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4486,7 +4538,7 @@
 		(fields_autoplaced yes)
 		(uuid "0315537a-a985-4191-9c35-9b3ee9314b53")
 		(property "Reference" "#PWR04"
-			(at 82.55 43.18 0)
+			(at 82.55 38.1 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4495,7 +4547,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 82.55 34.29 0)
+			(at 82.55 29.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4503,7 +4555,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 82.55 39.37 0)
+			(at 82.55 34.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4512,7 +4564,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 82.55 39.37 0)
+			(at 82.55 34.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4521,7 +4573,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 82.55 39.37 0)
+			(at 82.55 34.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6795,6 +6847,75 @@
 			(project "ttrpg9000"
 				(path "/37ce4038-841f-4e44-8de6-42c53e7a7d39"
 					(reference "C2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 64.77 43.18 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "7bb2cb69-0794-443b-b0f8-4dd281fbab0a")
+		(property "Reference" "R13"
+			(at 59.436 42.164 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10k"
+			(at 59.436 44.704 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
+			(at 62.992 43.18 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 64.77 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 64.77 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "b8899e4d-d045-44af-8f22-e8f970df1644")
+		)
+		(pin "1"
+			(uuid "5d356ce0-0e18-4584-afbf-9775c8651730")
+		)
+		(instances
+			(project "ttrpg9000"
+				(path "/37ce4038-841f-4e44-8de6-42c53e7a7d39"
+					(reference "R13")
 					(unit 1)
 				)
 			)
