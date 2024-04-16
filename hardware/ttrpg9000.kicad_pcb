@@ -2975,7 +2975,7 @@
 		(uuid "4b501ed3-e05e-4ef8-87ad-d493df7e2a10")
 		(at 104.755 75.565 180)
 		(property "Reference" "SW1"
-			(at -3.81 3.175 180)
+			(at -2.54 -3.175 180)
 			(layer "F.SilkS")
 			(uuid "899f3725-d4bb-4be2-a7bc-bec3d32a786d")
 			(effects
@@ -10015,7 +10015,7 @@
 		(descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U1"
-			(at 3.81 2.33 270)
+			(at 3.81 2.33 -90)
 			(layer "B.SilkS")
 			(uuid "253bd903-303b-46ab-bb71-1ba9cd0ce303")
 			(effects
@@ -10027,7 +10027,7 @@
 			)
 		)
 		(property "Value" "ATtiny2313A-P"
-			(at 3.81 -25.19 270)
+			(at 3.81 -25.19 -90)
 			(layer "B.Fab")
 			(uuid "32664366-1a71-4a8a-828d-dd6255045dfc")
 			(effects
@@ -10234,7 +10234,7 @@
 			(uuid "60b5a456-fa71-49cc-9f42-b3a062b003dd")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 3.81 -11.43 270)
+			(at 3.81 -11.43 -90)
 			(layer "B.Fab")
 			(uuid "0d0ff9eb-3e84-4524-89e9-7522f479c1c1")
 			(effects
@@ -10806,6 +10806,54 @@
 		)
 		(layer "Edge.Cuts")
 		(uuid "955b134c-0e18-4acd-b3dd-6d2575a33366")
+	)
+	(gr_text "."
+		(at 144.76 80.01 0)
+		(layer "F.SilkS")
+		(uuid "064b47a2-f7f5-4c77-83dd-9974a44ec72d")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "Turn: Dice Type\nPress: Roll"
+		(at 173.335 104.14 0)
+		(layer "F.SilkS")
+		(uuid "11cff907-b783-4590-a797-8fef775ffae1")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "POWER"
+		(at 105.39 73.025 0)
+		(layer "F.SilkS")
+		(uuid "5afc6a52-2669-4188-8ac5-7a150477d2e3")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "Turn: # Dice\nPress: Go Back\n"
+		(at 94.595 104.14 0)
+		(layer "F.SilkS")
+		(uuid "9c9e680d-7059-4072-a023-6ce4cf6e3b89")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
 	)
 	(gr_text "TTRPG-9000 v0.2"
 		(at 129.52 113.665 0)
