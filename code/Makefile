@@ -14,7 +14,7 @@ $(HEX): $(OBJ)
 	avr-objcopy -O ihex -j .text -j .data $< $@
 
 read-fuses:
-	avrdude -v -p attiny2313 -c $(ISP) -P $(DEV) -U -b 19200 lfuse:r:-:m
+	avrdude -v -p attiny2313 -c $(ISP) -P $(DEV) -b 19200 -U lfuse:r:-:h
 
 write-fuses:
 	@echo "Not implemented"
