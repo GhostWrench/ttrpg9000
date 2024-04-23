@@ -1,26 +1,27 @@
-HEX=build/main.hex
-OBJ=build/main.o
-DEV?=/dev/ttyACM0
-ISP?=stk500v1
+HEX=./build/main.hex
+OBJ=./build/main.o
+ISP?=usbtiny
 
 .PHONY: clean fuses flash
 
 all: $(HEX)
 
 $(OBJ): src/main.c
-	avr-gcc -mmcu=attiny2313a -o $@ $<
+	avr-gcc -Os -mmcu=attiny2313a -o $@ $<
 
 $(HEX): $(OBJ)
 	avr-objcopy -O ihex -j .text -j .data $< $@
 
 read-fuses:
-	avrdude -v -p attiny2313 -c $(ISP) -P $(DEV) -b 19200 -U lfuse:r:-:h
+	avrdude -v -p attiny2313 -c $(ISP) -b 19200 -U lfuse:r:-:h
 
 write-fuses:
-	@echo "Not implemented"
+	avrdude -v -p t2313 -c $(ISP) -b 19200 -U lfuse:w:0x64:m
+	avrdude -v -p t2313 -c $(ISP) -b 19200 -U hfuse:w:0xDF:m
+	avrdude -v -p t2313 -c $(ISP) -b 19200 -U efuse:w:0xFF:m
 
-flash:
-	@echo "not implemented"
+flash: $(HEX)
+	avrdude -v -p t2313 -c $(ISP) -b 19200 -U flash:w:$(HEX):i
 
 clean:
 	rm -rf build/*
