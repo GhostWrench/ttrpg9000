@@ -3027,12 +3027,6 @@
 		(uuid "3a901b9e-4348-4fb3-9f48-2325bf5339d0")
 	)
 	(junction
-		(at 236.22 142.24)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "4acd15be-8d8b-4fb7-9867-f32b40489112")
-	)
-	(junction
 		(at 120.65 52.07)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -3099,6 +3093,12 @@
 		(uuid "83dd5b16-13ea-4bc7-bab4-a36856fc7f78")
 	)
 	(junction
+		(at 247.65 142.24)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "93315382-8fef-4b9a-8faf-bd829d8cf43b")
+	)
+	(junction
 		(at 153.67 119.38)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -3109,12 +3109,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "a82e084e-0e4f-4ab6-b382-4780f52cbfeb")
-	)
-	(junction
-		(at 170.18 142.24)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "af751129-9d42-4b4a-9dd6-1202beeee54c")
 	)
 	(junction
 		(at 74.93 90.17)
@@ -3145,6 +3139,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "d538d51a-123f-4dda-a2aa-95677bc0cd6a")
+	)
+	(junction
+		(at 181.61 142.24)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "d92700eb-47e3-4f0a-9fe1-ffd2801b8601")
 	)
 	(junction
 		(at 139.7 124.46)
@@ -3300,7 +3300,7 @@
 	)
 	(wire
 		(pts
-			(xy 236.22 153.67) (xy 236.22 156.21)
+			(xy 247.65 152.4) (xy 247.65 154.94)
 		)
 		(stroke
 			(width 0)
@@ -3430,7 +3430,7 @@
 	)
 	(wire
 		(pts
-			(xy 170.18 153.67) (xy 170.18 156.21)
+			(xy 181.61 152.4) (xy 181.61 154.94)
 		)
 		(stroke
 			(width 0)
@@ -3600,7 +3600,7 @@
 	)
 	(wire
 		(pts
-			(xy 170.18 142.24) (xy 170.18 146.05)
+			(xy 181.61 142.24) (xy 181.61 144.78)
 		)
 		(stroke
 			(width 0)
@@ -3790,7 +3790,7 @@
 	)
 	(wire
 		(pts
-			(xy 233.68 142.24) (xy 236.22 142.24)
+			(xy 233.68 142.24) (xy 247.65 142.24)
 		)
 		(stroke
 			(width 0)
@@ -3940,7 +3940,7 @@
 	)
 	(wire
 		(pts
-			(xy 236.22 142.24) (xy 236.22 146.05)
+			(xy 247.65 142.24) (xy 247.65 144.78)
 		)
 		(stroke
 			(width 0)
@@ -4230,7 +4230,7 @@
 	)
 	(wire
 		(pts
-			(xy 167.64 142.24) (xy 170.18 142.24)
+			(xy 167.64 142.24) (xy 181.61 142.24)
 		)
 		(stroke
 			(width 0)
@@ -4277,16 +4277,6 @@
 			(type default)
 		)
 		(uuid "a6179eb2-9f6f-4492-855d-b60683cc1307")
-	)
-	(wire
-		(pts
-			(xy 236.22 142.24) (xy 247.65 142.24)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a9c6e1c0-d890-4b0d-b297-11d24541faac")
 	)
 	(wire
 		(pts
@@ -4597,16 +4587,6 @@
 			(type default)
 		)
 		(uuid "d65cc0f5-6d7e-4616-8a6c-7db2ba24864b")
-	)
-	(wire
-		(pts
-			(xy 170.18 142.24) (xy 181.61 142.24)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d94bd267-a352-48b0-b235-bd0d3aefaf40")
 	)
 	(wire
 		(pts
@@ -5405,72 +5385,6 @@
 			(project "ttrpg9000"
 				(path "/37ce4038-841f-4e44-8de6-42c53e7a7d39"
 					(reference "#PWR013")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 151.13 140.97 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "0be2bd20-8a21-4708-a665-c9b7bfa66dcd")
-		(property "Reference" "#PWR010"
-			(at 151.13 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 151.13 146.05 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 151.13 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 151.13 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 151.13 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "489903d0-d2ca-4d97-b4c4-ecbbcabe7231")
-		)
-		(instances
-			(project "ttrpg9000"
-				(path "/37ce4038-841f-4e44-8de6-42c53e7a7d39"
-					(reference "#PWR010")
 					(unit 1)
 				)
 			)
@@ -6490,7 +6404,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 236.22 149.86 0)
+		(at 247.65 148.59 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -6498,7 +6412,7 @@
 		(dnp no)
 		(uuid "31219348-29ed-4160-a49d-accc3b582e46")
 		(property "Reference" "C16"
-			(at 231.14 148.59 0)
+			(at 242.57 147.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6506,7 +6420,7 @@
 			)
 		)
 		(property "Value" "0.01u"
-			(at 231.14 151.13 0)
+			(at 242.57 149.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6514,7 +6428,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_THT:C_Axial_L5.1mm_D3.1mm_P7.50mm_Horizontal"
-			(at 237.1852 153.67 0)
+			(at 248.6152 152.4 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6523,7 +6437,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 236.22 149.86 0)
+			(at 247.65 148.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6532,7 +6446,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 236.22 149.86 0)
+			(at 247.65 148.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6689,6 +6603,138 @@
 			(project "ttrpg9000"
 				(path "/37ce4038-841f-4e44-8de6-42c53e7a7d39"
 					(reference "SW1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 151.13 140.97 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "4497d5cc-1c05-42b6-be2a-0026d08b797b")
+		(property "Reference" "#PWR010"
+			(at 151.13 147.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 151.13 146.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 151.13 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 151.13 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 151.13 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "7f3f214f-7bef-4df0-b2f2-942e36100152")
+		)
+		(instances
+			(project "ttrpg9000"
+				(path "/37ce4038-841f-4e44-8de6-42c53e7a7d39"
+					(reference "#PWR010")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 217.17 140.97 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "45935d56-573f-40c0-939d-45767b99b206")
+		(property "Reference" "#PWR017"
+			(at 217.17 147.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 217.17 146.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 217.17 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 217.17 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 217.17 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "49354ecd-e61b-4987-bf62-ea0912ae7823")
+		)
+		(instances
+			(project "ttrpg9000"
+				(path "/37ce4038-841f-4e44-8de6-42c53e7a7d39"
+					(reference "#PWR017")
 					(unit 1)
 				)
 			)
@@ -7849,7 +7895,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 236.22 156.21 0)
+		(at 247.65 154.94 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -7858,7 +7904,7 @@
 		(fields_autoplaced yes)
 		(uuid "82d40aeb-8d25-41c5-8610-dbae87f37668")
 		(property "Reference" "#PWR020"
-			(at 236.22 162.56 0)
+			(at 247.65 161.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7867,7 +7913,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 236.22 161.29 0)
+			(at 247.65 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7875,7 +7921,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 236.22 156.21 0)
+			(at 247.65 154.94 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7884,7 +7930,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 236.22 156.21 0)
+			(at 247.65 154.94 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7893,7 +7939,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 236.22 156.21 0)
+			(at 247.65 154.94 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8112,72 +8158,6 @@
 			(project "ttrpg9000"
 				(path "/37ce4038-841f-4e44-8de6-42c53e7a7d39"
 					(reference "BT1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 217.17 140.97 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "93c17d8d-fab3-4105-8c97-d6d0773a19c5")
-		(property "Reference" "#PWR017"
-			(at 217.17 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 217.17 146.05 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 217.17 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 217.17 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 217.17 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "db704012-4c99-4226-9f11-0a1ed5d77cb8")
-		)
-		(instances
-			(project "ttrpg9000"
-				(path "/37ce4038-841f-4e44-8de6-42c53e7a7d39"
-					(reference "#PWR017")
 					(unit 1)
 				)
 			)
@@ -9196,7 +9176,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 170.18 156.21 0)
+		(at 181.61 154.94 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -9205,7 +9185,7 @@
 		(fields_autoplaced yes)
 		(uuid "ea82eed0-2c81-432b-b147-97e6634a4319")
 		(property "Reference" "#PWR015"
-			(at 170.18 162.56 0)
+			(at 181.61 161.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9214,7 +9194,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 170.18 161.29 0)
+			(at 181.61 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9222,7 +9202,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 170.18 156.21 0)
+			(at 181.61 154.94 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9231,7 +9211,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 170.18 156.21 0)
+			(at 181.61 154.94 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9240,7 +9220,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 170.18 156.21 0)
+			(at 181.61 154.94 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9262,7 +9242,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 170.18 149.86 0)
+		(at 181.61 148.59 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -9270,7 +9250,7 @@
 		(dnp no)
 		(uuid "ef6b6710-012a-489b-968d-3cb261edd67e")
 		(property "Reference" "C7"
-			(at 165.1 148.59 0)
+			(at 176.53 147.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9278,7 +9258,7 @@
 			)
 		)
 		(property "Value" "0.01u"
-			(at 165.1 151.13 0)
+			(at 176.53 149.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9286,7 +9266,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_THT:C_Axial_L5.1mm_D3.1mm_P7.50mm_Horizontal"
-			(at 171.1452 153.67 0)
+			(at 182.5752 152.4 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9295,7 +9275,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 170.18 149.86 0)
+			(at 181.61 148.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9304,7 +9284,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 170.18 149.86 0)
+			(at 181.61 148.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
