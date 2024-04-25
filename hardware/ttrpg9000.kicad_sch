@@ -5699,7 +5699,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965"
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad_TopBottom"
 			(at 123.19 194.31 0)
 			(effects
 				(font
@@ -5900,7 +5900,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965"
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad_TopBottom"
 			(at 123.19 175.26 0)
 			(effects
 				(font
@@ -6366,7 +6366,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965"
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad_TopBottom"
 			(at 123.19 187.96 0)
 			(effects
 				(font
@@ -7099,7 +7099,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965"
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad_TopBottom"
 			(at 123.19 181.61 0)
 			(effects
 				(font
@@ -8121,7 +8121,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Project:BAT_BH800S"
+		(property "Footprint" "Project:Keystone_3025-2"
 			(at 50.8 168.656 90)
 			(effects
 				(font
