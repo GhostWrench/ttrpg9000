@@ -114,7 +114,7 @@ void lcd_send_raw_cmd(uint8_t rs, uint8_t cmd)
 {
     // If the command is a function set command, update the state tracking 
     // variables
-    if ((cmd >> 4) == 1) // Function set command
+    if ((cmd >> 4) == 0x01) // Function set command
     {
         if (!(re_extension && GET_BIT(cmd, 1)))
         {
@@ -131,8 +131,8 @@ void lcd_send_raw_cmd(uint8_t rs, uint8_t cmd)
     uint8_t cmdh = ((cmd & 0xf0) >> 4);
     uint8_t cmdl = (cmd & 0x0f);
     spi_put_byte(cmds, 0);
-    spi_put_byte(cmdh, 0);
     spi_put_byte(cmdl, 0);
+    spi_put_byte(cmdh, 0);
 }
 
 /**
@@ -238,7 +238,6 @@ int main(void)
     lcd_send_raw_cmd(1, 0x44); // D
     lcd_send_raw_cmd(1, 0x41); // A
     lcd_send_raw_cmd(1, 0x4e); // N
-    lcd_send_raw_cmd(0, 0x45); // is the cursor moving??
     lcd_send_raw_cmd(1, 0x49); // I
     lcd_send_raw_cmd(1, 0x45); // E
     lcd_send_raw_cmd(1, 0x4C); // L
