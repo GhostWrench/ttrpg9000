@@ -2,14 +2,16 @@ HEX=./build/main.hex
 OBJ=./build/main.o
 ISP?=usbtiny
 
-.PHONY: clean fuses flash
+.PHONY: clean read-fuses write-fuses flash
 
 all: $(HEX)
 
 $(OBJ): src/main.c
+	@mkdir -p build
 	avr-gcc -Os -mmcu=attiny2313a -o $@ $<
 
 $(HEX): $(OBJ)
+	@mkdir -p build
 	avr-objcopy -O ihex -j .text -j .data $< $@
 
 read-fuses:

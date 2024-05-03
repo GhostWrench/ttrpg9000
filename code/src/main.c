@@ -5,6 +5,7 @@
 
 #include <stdint.h>
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #define F_CPU 1000000UL
 #include <util/delay.h>
 
@@ -32,6 +33,7 @@
 #define GET_BIT(REG, BIT) ((REG) & (1 << BIT))
 #define SET_BIT(REG, BIT) ((REG) |= (1 << (BIT)))
 #define CLR_BIT(REG, BIT) ((REG) &= ~(1 << (BIT)))
+#define HEX_CHAR(VALUE) ((VALUE) > 0x09 ? (VALUE)+0x41 : (VALUE)+0x30)
 
 /*******************
  * Pin function maps
@@ -51,7 +53,7 @@
 #define ENRA_DDR DDRB
 #define ENRA_PORT PORTB
 #define ENRA_BIT 2
-#define ENRA_DDR DDRB
+#define ENRB_DDR DDRB
 #define ENRB_PORT PORTB
 #define ENRB_BIT 3
 // Left pushbutton
@@ -62,6 +64,28 @@
 #define PBR_DDR DDRA
 #define PBR_PORT PORTA
 #define PBR_BIT 1
+
+/**
+ * LCD screen attributes
+ */
+#define LCD_NUM_COLUMNS 40
+#define LCD_NUM_ROWS 4
+
+void gpio_init(void)
+{
+    // Set pins to input mode
+    INPUT_PIN(ENLA);
+    INPUT_PIN(ENLB);
+    INPUT_PIN(PBL);
+    INPUT_PIN(ENRA);
+    INPUT_PIN(ENRB);
+    INPUT_PIN(PBR);
+
+    // Interrupts on ENLA, ENRA, PBL and PBR
+    GIMSK = PCIE0 | PCIE1;
+    PCMSK0 = ENLA_BIT | ENRA_BIT;
+    PCMSK1 = PBL_BIT | PBR_BIT;
+}
 
 void spi_init(void)
 {
@@ -230,8 +254,54 @@ void lcd_init(void)
     lcd_send_raw_cmd(0, 0x03);
 }
 
+// Write a number represented by a hexidecimal character string
+void write_hex(char* buf, uint8_t value)
+{
+    uint8_t msn = (value & 0xf0) >> 4;
+    buf[0] = HEX_CHAR(msn);
+    uint8_t lsn = value & 0x0f;
+    buf[1] = HEX_CHAR(lsn);
+}
+
+// Global pushbutton state
+static volatile uint8_t pb_isr_count = 0;
+// Global encoder state
+static volatile uint8_t en_isr_count = 0;
+
+void lcd_send_isr_counts(void)
+{
+    // Clear the screen and return to home
+    lcd_send_raw_cmd(0, 0x01);
+    lcd_send_raw_cmd(0, 0x03);
+    char buf[5] = {0};
+    write_hex(&(buf[0]), en_isr_count);
+    write_hex(&(buf[3]), pb_isr_count);
+    for (int ii=0; ii<5; ii++)
+    {
+        lcd_send_raw_cmd(1, buf[ii]);
+    }
+}
+
+// Encoder interrupt handling
+// Interrupt service routine
+ISR (PCINT_B_vect, ISR_BLOCK)
+{
+    // Encoder code goes here
+    en_isr_count++;
+    lcd_send_isr_counts();
+}
+
+// Pushbutton interrupt handling
+// Interrupt service routine
+ISR (PCINT_A_vect, ISR_BLOCK)
+{
+    pb_isr_count++;
+    lcd_send_isr_counts();
+}
+
 int main(void)
 {
+    // Initialize the 
     spi_init();
     lcd_init();
     // Send my name to the card!
