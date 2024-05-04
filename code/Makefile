@@ -8,7 +8,7 @@ all: $(HEX)
 
 $(OBJ): src/main.c
 	@mkdir -p build
-	avr-gcc -Os -mmcu=attiny2313a -o $@ $<
+	avr-gcc -Wall -Os -mmcu=attiny2313a -o $@ $<
 
 $(HEX): $(OBJ)
 	@mkdir -p build

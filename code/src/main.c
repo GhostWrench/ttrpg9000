@@ -4,6 +4,7 @@
  */
 
 #include <stdint.h>
+#include <string.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #define F_CPU 1000000UL
@@ -25,6 +26,7 @@
  ******************************************************************************/
 #define DDR_NAME(FUNCTION) (FUNCTION ## _DDR)
 #define PORT_NAME(FUNCTION) (FUNCTION ## _PORT)
+#define PIN_NAME(FUNCTION) (FUNCTION ## _PIN)
 #define BIT_NAME(FUNCTION) (FUNCTION ## _BIT)
 #define OUTPUT_PIN(FUNCTION) SET_BIT(DDR_NAME(FUNCTION), BIT_NAME(FUNCTION))
 #define INPUT_PIN(FUNCTION) CLR_BIT(DDR_NAME(FUNCTION), BIT_NAME(FUNCTION))
@@ -33,7 +35,7 @@
 #define GET_BIT(REG, BIT) ((REG) & (1 << BIT))
 #define SET_BIT(REG, BIT) ((REG) |= (1 << (BIT)))
 #define CLR_BIT(REG, BIT) ((REG) &= ~(1 << (BIT)))
-#define HEX_CHAR(VALUE) ((VALUE) > 0x09 ? (VALUE)+0x41 : (VALUE)+0x30)
+#define HEX_CHAR(VALUE) ((VALUE) > 0x09 ? (VALUE)+0x37 : (VALUE)+0x30)
 
 /*******************
  * Pin function maps
@@ -68,7 +70,7 @@
 /**
  * LCD screen attributes
  */
-#define LCD_NUM_COLUMNS 40
+#define LCD_NUM_COLUMNS 20
 #define LCD_NUM_ROWS 4
 
 void gpio_init(void)
@@ -77,14 +79,18 @@ void gpio_init(void)
     INPUT_PIN(ENLA);
     INPUT_PIN(ENLB);
     INPUT_PIN(PBL);
+    SET_PIN(PBL); // Enable pullup
     INPUT_PIN(ENRA);
     INPUT_PIN(ENRB);
     INPUT_PIN(PBR);
+    SET_PIN(PBR); // Enable pullup
 
     // Interrupts on ENLA, ENRA, PBL and PBR
-    GIMSK = PCIE0 | PCIE1;
-    PCMSK0 = ENLA_BIT | ENRA_BIT;
-    PCMSK1 = PBL_BIT | PBR_BIT;
+    //GIFR = _BV(INTF1) | _BV(INTF0) | _BV(PCIF0) | _BV(PCIF1) | _BV(PCIF2); // Clear all interrupts
+    GIMSK = (1 << PCIE0) | (1 << PCIE1); // Enable the PCIE0 and PCIE1 vectors
+    PCMSK0 = (1 << ENLA_BIT) | (1 << ENRA_BIT);
+    PCMSK1 = (1 << PBL_BIT) | (1 << PBR_BIT);
+    sei();
 }
 
 void spi_init(void)
@@ -246,8 +252,8 @@ void lcd_init(void)
     lcd_send_raw_cmd(0, 0x72);
     // function set RE=0, IS=0
     lcd_send_raw_cmd(0, 0x28);
-    // Display on, cursor on, blink on
-    lcd_send_raw_cmd(0, 0x0f);
+    // Display on
+    lcd_send_raw_cmd(0, 0x0c);
     // Clear the screen
     lcd_send_raw_cmd(0, 0x01);
     // Return to home
@@ -255,7 +261,7 @@ void lcd_init(void)
 }
 
 // Write a number represented by a hexidecimal character string
-void write_hex(char* buf, uint8_t value)
+void write_hex(char* buf, const uint8_t value)
 {
     uint8_t msn = (value & 0xf0) >> 4;
     buf[0] = HEX_CHAR(msn);
@@ -274,6 +280,7 @@ void lcd_send_isr_counts(void)
     lcd_send_raw_cmd(0, 0x01);
     lcd_send_raw_cmd(0, 0x03);
     char buf[5] = {0};
+    buf[2] = 0x20;
     write_hex(&(buf[0]), en_isr_count);
     write_hex(&(buf[3]), pb_isr_count);
     for (int ii=0; ii<5; ii++)
@@ -284,7 +291,7 @@ void lcd_send_isr_counts(void)
 
 // Encoder interrupt handling
 // Interrupt service routine
-ISR (PCINT_B_vect, ISR_BLOCK)
+ISR (PCINT0_vect)
 {
     // Encoder code goes here
     en_isr_count++;
@@ -293,7 +300,7 @@ ISR (PCINT_B_vect, ISR_BLOCK)
 
 // Pushbutton interrupt handling
 // Interrupt service routine
-ISR (PCINT_A_vect, ISR_BLOCK)
+ISR (PCINT1_vect)
 {
     pb_isr_count++;
     lcd_send_isr_counts();
@@ -304,11 +311,25 @@ int main(void)
     // Initialize the 
     spi_init();
     lcd_init();
-    // Send my name to the card!
-    lcd_send_raw_cmd(1, 0x44); // D
-    lcd_send_raw_cmd(1, 0x41); // A
-    lcd_send_raw_cmd(1, 0x4e); // N
-    lcd_send_raw_cmd(1, 0x49); // I
-    lcd_send_raw_cmd(1, 0x45); // E
-    lcd_send_raw_cmd(1, 0x4C); // L
+    gpio_init();
+    // Send some basic info the to LCD screen
+    char buf[LCD_NUM_COLUMNS];
+    memset(buf, 0x20, LCD_NUM_COLUMNS);
+    // Clear the screen
+    lcd_send_raw_cmd(0, 0x01);
+    // Return to home
+    lcd_send_raw_cmd(0, 0x03);
+    write_hex(&(buf[0]), SREG);
+    write_hex(&(buf[3]), GIMSK);
+    write_hex(&(buf[6]), GIFR);
+    write_hex(&(buf[9]), PCMSK0);
+    write_hex(&(buf[12]), PCMSK1);
+
+    for (int ii=0; ii<LCD_NUM_COLUMNS; ii++)
+    {
+        lcd_send_raw_cmd(1, buf[ii]);
+    }
+
+    // Send isr counts to the LCD
+    while (1) {} // Loop forever
 }
