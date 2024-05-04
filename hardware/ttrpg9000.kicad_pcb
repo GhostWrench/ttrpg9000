@@ -11636,18 +11636,6 @@
 			(justify left bottom mirror)
 		)
 	)
-	(gr_text "."
-		(at 144.76 80.01 0)
-		(layer "F.SilkS")
-		(uuid "064b47a2-f7f5-4c77-83dd-9974a44ec72d")
-		(effects
-			(font
-				(size 1 1)
-				(thickness 0.1)
-			)
-			(justify left bottom)
-		)
-	)
 	(gr_text "Turn: Dice Type\nPress: Roll"
 		(at 173.335 104.14 0)
 		(layer "F.SilkS")

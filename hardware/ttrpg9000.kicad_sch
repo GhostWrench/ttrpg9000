@@ -4864,6 +4864,26 @@
 		)
 		(uuid "b2ad95ec-7072-4027-a0fe-63ffa6a705c9")
 	)
+	(text "Encoder state transition time: ~0.5ms"
+		(exclude_from_sim no)
+		(at 154.686 87.376 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "ba733266-6db4-4774-b9c8-e34d8b5b242d")
+	)
+	(text "Button state transition time ~10ms"
+		(exclude_from_sim no)
+		(at 153.924 150.114 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "ff1db767-5dcd-4b18-add9-463c2db14511")
+	)
 	(label "ENLB"
 		(at 132.08 91.44 0)
 		(fields_autoplaced yes)
@@ -6511,7 +6531,7 @@
 				)
 			)
 		)
-		(property "Value" "0.01u"
+		(property "Value" "0.1u"
 			(at 242.57 149.86 0)
 			(effects
 				(font
@@ -9416,7 +9436,7 @@
 				)
 			)
 		)
-		(property "Value" "0.01u"
+		(property "Value" "0.1u"
 			(at 176.53 149.86 0)
 			(effects
 				(font
