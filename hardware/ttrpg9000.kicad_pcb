@@ -70,7 +70,7 @@
 		(aux_axis_origin 139.68 92.71)
 		(grid_origin 139.68 92.71)
 		(pcbplotparams
-			(layerselection 0x00010fc_ffffffff)
+			(layerselection 0x00210fc_ffffffff)
 			(plot_on_all_layers_selection 0x0000000_00000000)
 			(disableapertmacros no)
 			(usegerberextensions no)
@@ -923,7 +923,7 @@
 				)
 			)
 		)
-		(property "Value" "100"
+		(property "Value" "10"
 			(at 0 1.65 0)
 			(layer "F.Fab")
 			(uuid "d1ca1b51-ec6c-4c47-9128-d58f74bdb8d8")
@@ -11449,6 +11449,16 @@
 		(layer "Edge.Cuts")
 		(uuid "ea2a3d1d-d548-41ea-ae48-428a9462b826")
 	)
+	(gr_line
+		(start 110.68 69.71)
+		(end 168.68 69.71)
+		(stroke
+			(width 2)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "1c669240-28d6-46c4-bb9b-695a377546fb")
+	)
 	(gr_text "*"
 		(at 145.93 75.96 0)
 		(layer "B.SilkS")
@@ -11508,6 +11518,40 @@
 				(bold yes)
 			)
 			(justify left bottom)
+		)
+	)
+	(dimension
+		(type leader)
+		(layer "F.Fab")
+		(uuid "1278bb13-88a5-4e61-92c7-cf0b8fb8dc79")
+		(pts
+			(xy 168.68 69.71) (xy 190.68 69.71)
+		)
+		(gr_text "V-Score"
+			(at 203.38 69.71 0)
+			(layer "F.Fab")
+			(uuid "1278bb13-88a5-4e61-92c7-cf0b8fb8dc79")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(format
+			(prefix "")
+			(suffix "")
+			(units 0)
+			(units_format 0)
+			(precision 4)
+			(override_value "V-Score")
+		)
+		(style
+			(thickness 0.1)
+			(arrow_length 1.27)
+			(text_position_mode 0)
+			(text_frame 0)
+			(extension_offset 0.5)
 		)
 	)
 	(segment
