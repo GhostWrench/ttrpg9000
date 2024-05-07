@@ -11495,7 +11495,7 @@
 			(justify left bottom)
 		)
 	)
-	(gr_text "TTRPG-9000 v0.3"
+	(gr_text "TTRPG-9000 v0.4"
 		(at 149.18 36.96 180)
 		(layer "F.SilkS")
 		(uuid "acceffbe-3677-4531-9e31-5f3d11fb85b4")
