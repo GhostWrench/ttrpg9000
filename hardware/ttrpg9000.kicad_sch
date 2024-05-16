@@ -7057,7 +7057,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:TO-252-2"
+		(property "Footprint" "Project:TO-252-2_HandSolder"
 			(at 82.55 153.035 0)
 			(effects
 				(font
