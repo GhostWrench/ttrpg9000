@@ -29,6 +29,6 @@ fp-info-cache
 *.xml
 *.csv
 
-# Gerber files
-Gerber/
-Gerber.zip
+# Manufacturing outputs
+fabout/
+

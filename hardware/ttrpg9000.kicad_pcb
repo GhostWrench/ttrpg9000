@@ -104,7 +104,7 @@
 			(mirror no)
 			(drillshape 0)
 			(scaleselection 1)
-			(outputdirectory "Gerber/")
+			(outputdirectory "fabout/Gerber/")
 		)
 	)
 	(net 0 "")
