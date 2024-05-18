@@ -1,6 +1,6 @@
 HEX=./build/main.hex
 OBJ=./build/main.o
-ISP?=usbtiny
+ISP?=usbasp
 
 .PHONY: clean read-fuses write-fuses flash
 
@@ -15,15 +15,15 @@ $(HEX): $(OBJ)
 	avr-objcopy -O ihex -j .text -j .data $< $@
 
 read-fuses:
-	avrdude -v -p attiny2313 -c $(ISP) -b 19200 -U lfuse:r:-:h
+	avrdude -v -p t4313 -c $(ISP) -b 19200 -U lfuse:r:-:h
 
 write-fuses:
-	avrdude -v -p t2313 -c $(ISP) -b 19200 -U lfuse:w:0x64:m
-	avrdude -v -p t2313 -c $(ISP) -b 19200 -U hfuse:w:0xDF:m
-	avrdude -v -p t2313 -c $(ISP) -b 19200 -U efuse:w:0xFF:m
+	avrdude -v -p t4313 -c $(ISP) -b 19200 -U lfuse:w:0x64:m
+	avrdude -v -p t4313 -c $(ISP) -b 19200 -U hfuse:w:0xDF:m
+	avrdude -v -p t4313 -c $(ISP) -b 19200 -U efuse:w:0xFF:m
 
 flash: $(HEX)
-	avrdude -v -p t2313 -c $(ISP) -b 19200 -U flash:w:$(HEX):i
+	avrdude -v -p t4313 -c $(ISP) -b 19200 -U flash:w:$(HEX):i
 
 clean:
 	rm -rf build/*
