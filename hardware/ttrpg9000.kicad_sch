@@ -7,7 +7,7 @@
 	(title_block
 		(title "TTRPG-9000")
 		(date "2024-05-07")
-		(rev "v0.4")
+		(rev "v0.6")
 		(company "Ghost Wrench, LLC")
 	)
 	(lib_symbols
@@ -9196,7 +9196,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Project:CON_522070660_MOL"
+		(property "Footprint" "Project:RibbonCable_6pos_24AWG_2.54mm"
 			(at 106.68 64.77 0)
 			(effects
 				(font
@@ -10358,7 +10358,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Project:CON_522070660_MOL"
+		(property "Footprint" "Project:RibbonCable_6pos_24AWG_2.54mm"
 			(at 130.81 57.15 0)
 			(effects
 				(font

@@ -128,7 +128,7 @@
 	)
 	(fp_line
 		(start -6.39 3.5)
-		(end 5.8 3.5)
+		(end 5.25 3.5)
 		(stroke
 			(width 0.05)
 			(type solid)
@@ -137,7 +137,7 @@
 		(uuid "5f7b4ab3-6838-417c-82f9-44a1f89ef1c7")
 	)
 	(fp_line
-		(start 5.8 -3.5)
+		(start 5.25 -3.5)
 		(end -6.39 -3.5)
 		(stroke
 			(width 0.05)
@@ -147,8 +147,8 @@
 		(uuid "3ec02283-ad3f-4649-920d-af4177ca0494")
 	)
 	(fp_line
-		(start 5.8 3.5)
-		(end 5.8 -3.5)
+		(start 5.25 3.5)
+		(end 5.25 -3.5)
 		(stroke
 			(width 0.05)
 			(type solid)
@@ -315,8 +315,8 @@
 		(uuid "e8e525c7-9bf7-44f1-a8f3-2c8f6cede3b5")
 	)
 	(pad "2" smd roundrect
-		(at 1.78 0)
-		(size 7.44 5.8)
+		(at 1.53 0)
+		(size 6.94 5.8)
 		(layers "F.Cu" "F.Mask")
 		(roundrect_rratio 0.043103)
 		(uuid "f5de7413-d54a-4dc8-97fc-f76db6b432a0")
