@@ -1,29 +1,53 @@
-HEX=./build/main.hex
-OBJ=./build/main.o
-ISP?=usbasp
+SHELL = /bin/sh
+.SUFFIXES: 
+
+# Project configuration
+PROJECT_NAME := ttrpg9000
+VERSION_MAJOR := 0
+VERSION_MINOR := 5
+MCU ?= attiny4313
+ISP ?= usbasp
+
+# Flags
+CFLAGS := -Wall -Wextra -Wpedantic -Os -mmcu=$(MCU) -I./include
+
+# Project directories
+SRCDIR := src
+INCDIR := include
+BUILDDIR := build
+
+# Find files
+EXEC = $(BUILDDIR)/$(PROJECT_NAME)_v$(VERSION_MAJOR).$(VERSION_MINOR)
+SRCS = $(wildcard $(SRCDIR)/*.c)
+HDRS = $(wildcard $(INCDIR)/*.h)
+OBJS = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRCS))
 
 .PHONY: clean read-fuses write-fuses flash
 
-all: $(HEX)
+all: $(EXEC).hex
 
-$(OBJ): src/main.c
-	@mkdir -p build
-	avr-gcc -Wall -Os -mmcu=attiny2313a -o $@ $<
-
-$(HEX): $(OBJ)
-	@mkdir -p build
+$(EXEC).hex: $(EXEC)
 	avr-objcopy -O ihex -j .text -j .data $< $@
 
+$(EXEC): $(OBJS)
+	avr-gcc $(CFLAGS) -o $@ $^
+
+$(BUILDDIR)/%.o: $(SRCDIR)/%.c $(BUILDDIR)
+	avr-gcc $(CFLAGS) -c -o $@ $<
+
+$(BUILDDIR):
+	mkdir -p $(BUILDDIR)
+
 read-fuses:
-	avrdude -v -p t4313 -c $(ISP) -b 19200 -U lfuse:r:-:h
+	avrdude -v -p $(MCU) -c $(ISP) -b 19200 -U lfuse:r:-:h
 
 write-fuses:
-	avrdude -v -p t4313 -c $(ISP) -b 19200 -U lfuse:w:0x64:m
-	avrdude -v -p t4313 -c $(ISP) -b 19200 -U hfuse:w:0xDF:m
-	avrdude -v -p t4313 -c $(ISP) -b 19200 -U efuse:w:0xFF:m
+	avrdude -v -p $(MCU) -c $(ISP) -b 19200 -U lfuse:w:0x64:m
+	avrdude -v -p $(MCU) -c $(ISP) -b 19200 -U hfuse:w:0xDF:m
+	avrdude -v -p $(MCU) -c $(ISP) -b 19200 -U efuse:w:0xFF:m
 
 flash: $(HEX)
-	avrdude -v -p t4313 -c $(ISP) -b 19200 -U flash:w:$(HEX):i
+	avrdude -v -p $(MCU) -c $(ISP) -b 19200 -U flash:w:$(EXEC).hex:i
 
 clean:
 	rm -rf build/*

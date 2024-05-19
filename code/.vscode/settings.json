@@ -4,12 +4,16 @@
     ],
     "C_Cpp.dimInactiveRegions": false,
     "C_Cpp.default.includePath": [
+        "./include",
         "/usr/lib/avr/include"
     ],
     "C_Cpp.codeAnalysis.clangTidy.enabled": true,
     "C_Cpp.codeFolding": "disabled",
     "C_Cpp.default.defines": [
-        "__AVR_ATtiny2313A__"
+        "__AVR_ATtiny4313__"
     ],
-    "editor.renderWhitespace": "boundary"
+    "editor.renderWhitespace": "boundary",
+    "files.associations": {
+        "interrupt.h": "c"
+    }
 }
