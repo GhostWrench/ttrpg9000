@@ -7,9 +7,11 @@
 #include "gpio.h"
 #include "lcd.h"
 #include "util.h"
+#include "rand.h"
 
 int main(void)
 {
+    rand_init();
     gpio_init();
     lcd_init();
     CLR_PIN(RLED);

@@ -3,8 +3,9 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-#include "util.h"
 #include "gpio.h"
+#include "util.h"
+#include "rand.h"
 
 void gpio_init(void)
 {
@@ -69,6 +70,9 @@ ISR (PCINT0_vect)
     static int lpos = 0;
     static int rpos = 0;
 
+    // Use the interrupt to add entropy to the random number generator
+    rand_add_entropy();
+
     // Wait for signal to be stable
     _delay_ms(0.5);
     
@@ -115,6 +119,9 @@ ISR (PCINT1_vect)
     static uint8_t pbl = 1;
     static uint8_t pbr = 1;
 
+    // Use the interrupt to add entropy to the random number generator
+    rand_add_entropy();
+
     // Wait for the signal to be stable
     _delay_ms(10.0);
 
@@ -129,11 +136,22 @@ ISR (PCINT1_vect)
         CLR_PIN(BLED);
     }
 
-    // Down-press right button clears LEDs
+    // Down-press right calculates a random value between 0-7 to display on
+    // the LEDS in binary
     if (pbr && !pbr_update) {
-        SET_PIN(RLED);
-        SET_PIN(GLED);
-        SET_PIN(BLED);
+        uint64_t value = (rand_generate() % 8);
+        if (value & (1 << 0))
+            SET_PIN(RLED);
+        else
+            CLR_PIN(RLED);
+        if (value & (1 << 1))
+            SET_PIN(GLED);
+        else
+            CLR_PIN(GLED);
+        if (value & (1 << 2))
+            SET_PIN(BLED);
+        else
+            CLR_PIN(BLED);
     }
 
     // Update states
