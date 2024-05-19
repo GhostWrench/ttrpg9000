@@ -9,7 +9,7 @@
     "C_Cpp.codeAnalysis.clangTidy.enabled": true,
     "C_Cpp.codeFolding": "disabled",
     "C_Cpp.default.defines": [
-        "__AVR_ATtiny4313__"
+        "__AVR_ATtiny2313A__"
     ],
     "editor.renderWhitespace": "boundary"
 }

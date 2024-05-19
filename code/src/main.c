@@ -4,6 +4,7 @@
  */
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -32,6 +33,7 @@
 #define INPUT_PIN(FUNCTION) CLR_BIT(DDR_NAME(FUNCTION), BIT_NAME(FUNCTION))
 #define SET_PIN(FUNCTION) SET_BIT(PORT_NAME(FUNCTION), BIT_NAME(FUNCTION))
 #define CLR_PIN(FUNCTION) CLR_BIT(PORT_NAME(FUNCTION), BIT_NAME(FUNCTION))
+#define READ_PIN(FUNCTION) GET_BIT(PIN_NAME(FUNCTION), BIT_NAME(FUNCTION)) >> BIT_NAME(FUNCTION)
 #define GET_BIT(REG, BIT) ((REG) & (1 << BIT))
 #define SET_BIT(REG, BIT) ((REG) |= (1 << (BIT)))
 #define CLR_BIT(REG, BIT) ((REG) &= ~(1 << (BIT)))
@@ -47,25 +49,44 @@
 // Left encoder A and B outputs
 #define ENLA_DDR DDRB
 #define ENLA_PORT PORTB
+#define ENLA_PIN PINB
 #define ENLA_BIT 0
 #define ENLB_DDR DDRB
 #define ENLB_PORT PORTB
+#define ENLB_PIN PINB
 #define ENLB_BIT 1
-// Right encoder A and B outputs
+// Right encoder A and B outputs CURRENTLY REVERSED for v0.4 board development
 #define ENRA_DDR DDRB
 #define ENRA_PORT PORTB
-#define ENRA_BIT 2
+#define ENRA_PIN PINB
+#define ENRA_BIT 3
 #define ENRB_DDR DDRB
 #define ENRB_PORT PORTB
-#define ENRB_BIT 3
+#define ENRB_PIN PINB
+#define ENRB_BIT 2
 // Left pushbutton
 #define PBL_DDR DDRA
 #define PBL_PORT PORTA
+#define PBL_PIN PINA
 #define PBL_BIT 0
 // Right pushbutton
 #define PBR_DDR DDRA
 #define PBR_PORT PORTA
+#define PBR_PIN PINA
 #define PBR_BIT 1
+// LEDS
+#define RLED_DDR DDRD
+#define RLED_PORT PORTD
+#define RLED_PIN PIND
+#define RLED_BIT 6
+#define GLED_DDR DDRD
+#define GLED_PORT PORTD
+#define GLED_PIN PIND
+#define GLED_BIT 5
+#define BLED_DDR DDRD
+#define BLED_PORT PORTD
+#define BLED_PIN PIND
+#define BLED_BIT 4
 
 /**
  * LCD screen attributes
@@ -75,20 +96,31 @@
 
 void gpio_init(void)
 {
-    // Set pins to input mode
+    // Set the LEDs to output
+    OUTPUT_PIN(RLED);
+    SET_PIN(RLED);
+    OUTPUT_PIN(GLED);
+    SET_PIN(GLED);
+    OUTPUT_PIN(BLED);
+    SET_PIN(BLED);
+
+    // Set encoder and push button pins to input with pullup resistor
     INPUT_PIN(ENLA);
+    SET_PIN(ENLA);
     INPUT_PIN(ENLB);
+    SET_PIN(ENLB);
     INPUT_PIN(PBL);
-    SET_PIN(PBL); // Enable pullup
+    SET_PIN(PBL);
     INPUT_PIN(ENRA);
+    SET_PIN(ENRA);
     INPUT_PIN(ENRB);
+    SET_PIN(ENRB);
     INPUT_PIN(PBR);
-    SET_PIN(PBR); // Enable pullup
+    SET_PIN(PBR);
 
     // Interrupts on ENLA, ENRA, PBL and PBR
-    //GIFR = _BV(INTF1) | _BV(INTF0) | _BV(PCIF0) | _BV(PCIF1) | _BV(PCIF2); // Clear all interrupts
     GIMSK = (1 << PCIE0) | (1 << PCIE1); // Enable the PCIE0 and PCIE1 vectors
-    PCMSK0 = (1 << ENLA_BIT) | (1 << ENRA_BIT);
+    PCMSK0 = (1 << ENLA_BIT) | (1 << ENLB_BIT) | (1 << ENRA_BIT) | (1 << ENRB_BIT);
     PCMSK1 = (1 << PBL_BIT) | (1 << PBR_BIT);
     sei();
 }
@@ -110,7 +142,7 @@ void spi_init(void)
     UCSRB =   (1 << RXEN)
             | (1 << TXEN);
     // The maximum clock frequency for the DOGM204 LCD display is 1MHz the
-    // ATtiny2313 is running at 1MHz so the max baud rate would be 500kHz
+    // ATtiny4313 is running at 1MHz so the max baud rate would be 500kHz
     UBRRL = 9; // 100 kHz
 }
 
@@ -260,76 +292,132 @@ void lcd_init(void)
     lcd_send_raw_cmd(0, 0x03);
 }
 
-// Write a number represented by a hexidecimal character string
-void write_hex(char* buf, const uint8_t value)
-{
-    uint8_t msn = (value & 0xf0) >> 4;
-    buf[0] = HEX_CHAR(msn);
-    uint8_t lsn = value & 0x0f;
-    buf[1] = HEX_CHAR(lsn);
-}
+// Global state of the left and right encoders
+typedef struct {
+    uint8_t a;
+    uint8_t b;
+} EncoderState;
 
-// Global pushbutton state
-static volatile uint8_t pb_isr_count = 0;
-// Global encoder state
-static volatile uint8_t en_isr_count = 0;
+typedef enum {
+    CCW_SPIN = -1,
+    NO_SPIN = 0,
+    CW_SPIN = 1,
+} EncoderSpin;
 
-void lcd_send_isr_counts(void)
+static EncoderState enl = {
+    .a = 1,
+    .b = 1,
+};
+static EncoderState enr = {
+    .a = 1,
+    .b = 1,
+};
+
+EncoderSpin EncoderState_update(EncoderState *state, uint8_t a, uint8_t b)
 {
-    // Clear the screen and return to home
-    lcd_send_raw_cmd(0, 0x01);
-    lcd_send_raw_cmd(0, 0x03);
-    char buf[5] = {0};
-    buf[2] = 0x20;
-    write_hex(&(buf[0]), en_isr_count);
-    write_hex(&(buf[3]), pb_isr_count);
-    for (int ii=0; ii<5; ii++)
-    {
-        lcd_send_raw_cmd(1, buf[ii]);
+    EncoderSpin spin = NO_SPIN;
+    if (state->a == 0 && a == 0 && state->b == 1 && b == 0) {
+    // If B transitions high to low while A is low, CW spin
+        spin = CW_SPIN;
+    } else if (state->b == 0 && b == 0 && state->a == 1 && a == 0) {
+    // If A transition high to low while B is low, CCW spin
+        spin = CCW_SPIN;
     }
+    state->a = a;
+    state->b = b;
+
+    return spin;
 }
 
 // Encoder interrupt handling
 // Interrupt service routine
+//static int lpos = 0;
+//static int rpos = 0;
 ISR (PCINT0_vect)
 {
-    // Encoder code goes here
-    en_isr_count++;
-    lcd_send_isr_counts();
+    static int lpos = 0;
+    static int rpos = 0;
+
+    // Wait for signal to be stable
+    _delay_ms(0.5);
+    
+    // Calculate the encoder positions
+    uint8_t la = READ_PIN(ENLA);
+    uint8_t lb = READ_PIN(ENLB);
+    uint8_t ra = READ_PIN(ENRA);
+    uint8_t rb = READ_PIN(ENRB);
+    EncoderSpin lspin = EncoderState_update(&enl, la, lb);
+    EncoderSpin rspin = EncoderState_update(&enr, ra, rb);
+
+
+    // Calculate the new position
+    lpos += lspin;
+    rpos += rspin;
+
+    // Light up LEDS
+    int val = (lpos+rpos) % 3;
+    if (val < 0) val+= 3;
+    switch (val) {
+    case 0:
+        SET_PIN(RLED);
+        CLR_PIN(GLED);
+        CLR_PIN(BLED);
+        break;
+    case 1:
+        CLR_PIN(RLED);
+        SET_PIN(GLED);
+        CLR_PIN(BLED);
+        break;
+    case 2:
+        CLR_PIN(RLED);
+        CLR_PIN(GLED);
+        SET_PIN(BLED);
+        break;
+    }
 }
 
 // Pushbutton interrupt handling
 // Interrupt service routine
 ISR (PCINT1_vect)
 {
-    pb_isr_count++;
-    lcd_send_isr_counts();
+    // Global state of the pushbuttons
+    static uint8_t pbl = 1;
+    static uint8_t pbr = 1;
+
+    // Wait for the signal to be stable
+    _delay_ms(10.0);
+
+    // Get the button values
+    uint8_t pbl_update = READ_PIN(PBL);
+    uint8_t pbr_update = READ_PIN(PBR);
+
+    // Down-press left button clears LEDs
+    if (pbl && !pbl_update) {
+        CLR_PIN(RLED);
+        CLR_PIN(GLED);
+        CLR_PIN(BLED);
+    }
+
+    // Down-press right button clears LEDs
+    if (pbr && !pbr_update) {
+        SET_PIN(RLED);
+        SET_PIN(GLED);
+        SET_PIN(BLED);
+    }
+
+    // Update states
+    pbl = pbl_update;
+    pbr = pbr_update;
 }
 
 int main(void)
 {
-    // Initialize the 
+    gpio_init();
     spi_init();
     lcd_init();
-    gpio_init();
-    // Send some basic info the to LCD screen
-    char buf[LCD_NUM_COLUMNS];
-    memset(buf, 0x20, LCD_NUM_COLUMNS);
-    // Clear the screen
-    lcd_send_raw_cmd(0, 0x01);
-    // Return to home
-    lcd_send_raw_cmd(0, 0x03);
-    write_hex(&(buf[0]), SREG);
-    write_hex(&(buf[3]), GIMSK);
-    write_hex(&(buf[6]), GIFR);
-    write_hex(&(buf[9]), PCMSK0);
-    write_hex(&(buf[12]), PCMSK1);
+    CLR_PIN(RLED);
+    CLR_PIN(GLED);
+    CLR_PIN(BLED);
 
-    for (int ii=0; ii<LCD_NUM_COLUMNS; ii++)
-    {
-        lcd_send_raw_cmd(1, buf[ii]);
-    }
-
-    // Send isr counts to the LCD
     while (1) {} // Loop forever
 }
