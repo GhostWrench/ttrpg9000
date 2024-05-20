@@ -25,7 +25,7 @@ void ui_home(void)
     screen = HOME_SCREEN;
     lcd_clear();
     lcd_write_text("TTRPG");
-    lcd_write_number(9000, 4);
+    lcd_write_number(9000, 5, 0);
 }
 
 #define max_dice 4
@@ -40,9 +40,9 @@ void ui_dice(void)
 {
     screen = DICE_SCREEN;
     lcd_clear();
-    lcd_write_number(num_dice, 3);
+    lcd_write_number(num_dice, 3, 1);
     lcd_send_cmd(1, 'd');
-    lcd_write_number(side_count[die], 3);
+    lcd_write_number(side_count[die], 3, 0);
 }
 
 uint8_t rolls[max_dice] = {0};
@@ -52,7 +52,7 @@ void ui_roll(void)
     lcd_clear();
     for (uint8_t ii=0; ii<num_dice; ii++)
     {
-        lcd_write_number(rolls[ii], 4);
+        lcd_write_number(rolls[ii], 4, 1);
     }
 }
 

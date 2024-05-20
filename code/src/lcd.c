@@ -107,7 +107,7 @@ void lcd_init(void)
     lcd_send_cmd(0, 0x03);
 }
 
-void lcd_write_number(uint16_t number, int8_t pad)
+void lcd_write_number(uint16_t number, int8_t pad, int8_t just)
 {
     // Do the division
     int8_t width = 0;
@@ -124,6 +124,7 @@ void lcd_write_number(uint16_t number, int8_t pad)
     
     // Write the value to the screen
     if (width > pad)
+    // Value doesn't fit, write ## to indicate error
     {
         for (int8_t ii=(pad-1); ii>=0; ii--)
         {
@@ -132,13 +133,25 @@ void lcd_write_number(uint16_t number, int8_t pad)
     }
     else
     {
-        for (int8_t ii=pad; ii>width; ii--)
+        if (just > 0)
+        // Right justify, write pad first
         {
-            lcd_send_cmd(1, 0x20);
+            for (int8_t ii=pad; ii>width; ii--)
+            {
+                lcd_send_cmd(1, 0x20);
+            }
         }
         for (int8_t ii=(width-1); ii>=0; ii--)
         {
             lcd_send_cmd(1, HEX_CHAR(buffer[ii]));
+        }
+        if (just <= 0)
+        // Left justify, write pad last
+        {
+            for (int8_t ii=pad; ii>width; ii--)
+            {
+                lcd_send_cmd(1, 0x20);
+            }
         }
     }
 }
