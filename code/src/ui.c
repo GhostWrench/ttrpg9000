@@ -11,13 +11,13 @@ static enum {
 void mod_add(uint8_t *num, uint8_t max)
 {
     (*num)++;
-    if (*num > max) *num = 0;
+    if (*num > max) *num = 1;
 }
 
 void mod_sub(uint8_t *num, uint8_t max)
 {
     (*num)--;
-    if (*num > max) *num = max;
+    if (*num < 1) *num = max;
 }
 
 void ui_home(void)
@@ -28,21 +28,12 @@ void ui_home(void)
     lcd_write_number(9000, 4);
 }
 
-#define max_dice 2
-static const uint8_t side_count[] = {
-    2, 4, 6, 8, 10, 12, 20, 100
+#define max_dice 4
+#define dice_types 9
+static const uint8_t side_count[dice_types] = {
+    0, 2, 4, 6, 8, 10, 12, 20, 100
 };
-static enum {
-    D2,
-    D4,
-    D6,
-    D8,
-    D10,
-    D12,
-    D20,
-    D100,
-    DCOUNT,
-} die = D20;
+static uint8_t die = 7;
 static uint8_t num_dice = 1;
 
 void ui_dice(void)
@@ -61,9 +52,7 @@ void ui_roll(void)
     lcd_clear();
     for (uint8_t ii=0; ii<num_dice; ii++)
     {
-        lcd_write_number(ii, 2);
-        lcd_send_cmd(1, ':');
-        lcd_write_number(ii, 3);
+        lcd_write_number(rolls[ii], 4);
     }
 }
 
@@ -87,11 +76,11 @@ void ui_manager(UIInput input)
             ui_dice();
             break;
         case ENR_CCW:
-            mod_sub(&die, DCOUNT);
+            mod_sub(&die, dice_types-1);
             ui_dice();
             break;
         case ENR_CW:
-            mod_add(&die, DCOUNT);
+            mod_add(&die, dice_types-1);
             ui_dice();
             break;
         case PBR_PRESS:
