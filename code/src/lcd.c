@@ -129,7 +129,7 @@ void lcd_write_number(uint16_t number, uint8_t pad)
     }
     for (uint8_t ii=width; ii>0; ii--)
     {
-        lcd_send_cmd(1, buffer[ii]);
+        lcd_send_cmd(1, HEX_CHAR(buffer[ii]));
     }
 }
 

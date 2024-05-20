@@ -22,6 +22,7 @@ void mod_sub(uint8_t *num, uint8_t max)
 
 void ui_home(void)
 {
+    screen = HOME_SCREEN;
     lcd_clear();
     lcd_write_text("TTRPG9000");
 }
@@ -45,6 +46,7 @@ static uint8_t num_dice = 1;
 
 void ui_dice(void)
 {
+    screen = DICE_SCREEN;
     lcd_clear();
     lcd_write_number(num_dice, 3);
     lcd_send_cmd(1, 'd');
@@ -54,6 +56,7 @@ void ui_dice(void)
 uint8_t rolls[max_dice] = {0};
 void ui_roll(void)
 {
+    screen = ROLL_SCREEN;
     lcd_clear();
     for (uint8_t ii=0; ii<num_dice; ii++)
     {
@@ -69,7 +72,6 @@ void ui_manager(UIInput input)
     {
     case HOME_SCREEN:
         // Home screen changes as soon as an input is made
-        screen = DICE_SCREEN;
         ui_dice();
         break;
     case DICE_SCREEN:
@@ -77,15 +79,19 @@ void ui_manager(UIInput input)
         {
         case ENL_CCW:
             mod_sub(&num_dice, max_dice);
+            ui_dice();
             break;
         case ENL_CW:
             mod_add(&num_dice, max_dice);
+            ui_dice();
             break;
         case ENR_CCW:
             mod_sub(&die, DCOUNT);
+            ui_dice();
             break;
         case ENR_CW:
             mod_add(&die, DCOUNT);
+            ui_dice();
             break;
         case PBR_PRESS:
             for (uint8_t ii=0; ii<num_dice; ii++)
