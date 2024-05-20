@@ -24,7 +24,8 @@ void ui_home(void)
 {
     screen = HOME_SCREEN;
     lcd_clear();
-    lcd_write_text("TTRPG9000");
+    lcd_write_text("TTRPG");
+    lcd_write_number(9000, 4);
 }
 
 #define max_dice 2

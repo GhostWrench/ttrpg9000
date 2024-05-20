@@ -107,36 +107,46 @@ void lcd_init(void)
     lcd_send_cmd(0, 0x03);
 }
 
-void lcd_write_number(uint16_t number, uint8_t pad)
+void lcd_write_number(uint16_t number, int8_t pad)
 {
     // Do the division
-    uint8_t width = 0;
+    int8_t width = 0;
     char buffer[5];
-    uint16_t denom = 10;
-    for (uint8_t ii=0; ii<5; ii++)
+    int16_t denom = 10;
+    for (int8_t ii=0; ii<5; ii++)
     {
         div_t result = div(number, denom);
-        buffer[ii] = HEX_CHAR(result.rem);
+        buffer[ii] = result.rem;
         number = result.quot;
         width++;
         if (number == 0) break;
     }
     
     // Write the value to the screen
-    for (uint8_t ii=pad; ii>width; ii--)
+    if (width > pad)
     {
-        lcd_send_cmd(1, 0x20);
+        for (int8_t ii=(pad-1); ii>=0; ii--)
+        {
+            lcd_send_cmd(1, 0x23);
+        }
     }
-    for (uint8_t ii=width; ii>0; ii--)
+    else
     {
-        lcd_send_cmd(1, HEX_CHAR(buffer[ii]));
+        for (int8_t ii=pad; ii>width; ii--)
+        {
+            lcd_send_cmd(1, 0x20);
+        }
+        for (int8_t ii=(width-1); ii>=0; ii--)
+        {
+            lcd_send_cmd(1, HEX_CHAR(buffer[ii]));
+        }
     }
 }
 
 void lcd_write_text(char *text)
 {
-    uint8_t text_len = strlen(text);
-    for (uint8_t ii=0; ii<text_len; ii++)
+    int8_t text_len = strlen(text);
+    for (int8_t ii=0; ii<text_len; ii++)
     {
         lcd_send_cmd(1, text[ii]);
     }

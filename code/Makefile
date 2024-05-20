@@ -44,7 +44,7 @@ write-fuses:
 	avrdude -v -p $(MCU) -c $(ISP) -b 19200 -U hfuse:w:0xDF:m
 	avrdude -v -p $(MCU) -c $(ISP) -b 19200 -U efuse:w:0xFF:m
 
-flash: $(HEX)
+flash: $(EXEC).hex
 	avrdude -v -p $(MCU) -c $(ISP) -b 19200 -U flash:w:$(EXEC).hex:i
 
 clean:

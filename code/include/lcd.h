@@ -17,7 +17,7 @@ void lcd_send_cmd(uint8_t rs, uint8_t cmd);
 
 void lcd_clear(void);
 
-void lcd_write_number(uint16_t number, uint8_t pad);
+void lcd_write_number(uint16_t number, int8_t pad);
 
 void lcd_write_text(char *text);
 
