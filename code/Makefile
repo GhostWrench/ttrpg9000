@@ -32,11 +32,9 @@ $(EXEC).hex: $(EXEC)
 $(EXEC): $(OBJS)
 	avr-gcc $(CFLAGS) -o $@ $^
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.c $(BUILDDIR)
+$(BUILDDIR)/%.o: $(SRCDIR)/%.c $(HDRS)
+	@mkdir -p $(BUILDDIR)
 	avr-gcc $(CFLAGS) -c -o $@ $<
-
-$(BUILDDIR):
-	mkdir -p $(BUILDDIR)
 
 read-fuses:
 	avrdude -v -p $(MCU) -c $(ISP) -b 19200 -U lfuse:r:-:h

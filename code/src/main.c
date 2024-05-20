@@ -8,15 +8,21 @@
 #include "lcd.h"
 #include "util.h"
 #include "rand.h"
+#include "ui.h"
 
 int main(void)
 {
     rand_init();
     gpio_init();
     lcd_init();
-    CLR_PIN(RLED);
-    CLR_PIN(GLED);
-    CLR_PIN(BLED);
+
+    // Clear the screen
+    lcd_send_cmd(0, 0x01);
+    // Return to home
+    lcd_send_cmd(0, 0x03);
+
+    // Show the home screen
+    ui_home();
 
     while (1) {} // Loop forever
 }

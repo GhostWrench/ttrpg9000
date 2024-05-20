@@ -13,4 +13,12 @@
 
 void lcd_init(void);
 
+void lcd_send_cmd(uint8_t rs, uint8_t cmd);
+
+void lcd_clear(void);
+
+void lcd_write_number(uint16_t number, uint8_t pad);
+
+void lcd_write_text(char *text);
+
 #endif // TTRPG9000_LCD_H

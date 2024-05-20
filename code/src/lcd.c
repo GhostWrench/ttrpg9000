@@ -1,8 +1,12 @@
 #include "config.h"
 #include <util/delay.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "lcd.h"
 #include "util.h"
+
+#define HEX_CHAR(VALUE) ((VALUE) > 0x09 ? (VALUE)+0x37 : (VALUE)+0x30)
 
 void spi_put_byte(uint8_t byte, uint8_t *resp)
 {
@@ -26,7 +30,7 @@ uint8_t lcd_get_data(uint8_t rs)
     return resp;
 }
 
-void lcd_send_raw_cmd(uint8_t rs, uint8_t cmd)
+void lcd_send_cmd(uint8_t rs, uint8_t cmd)
 {
     uint8_t cmds = 0x1f;
     if (rs) SET_BIT(cmds, 6);
@@ -37,6 +41,12 @@ void lcd_send_raw_cmd(uint8_t rs, uint8_t cmd)
     spi_put_byte(cmdh, 0);
 }
 
+void lcd_clear(void)
+{
+    lcd_send_cmd(0, 0x01);
+    lcd_send_cmd(0, 0x03);
+}
+
 void lcd_init(void)
 {
     // SPI must be initialized first
@@ -44,7 +54,6 @@ void lcd_init(void)
     UBRRH = 0;
     UBRRL = 0;
     // Set XCK as an output port
-    XCK_BIT;
     OUTPUT_PIN(XCK);
     // Set MSPI operation mode, data direction and SPI data mode
     UCSRC =   (1 << UMSEL1)
@@ -71,29 +80,64 @@ void lcd_init(void)
     
     // Send the commands recommended to start the screen up
     // Set 8 bit data length, RE=1, REV=0
-    lcd_send_raw_cmd(0, 0x3a);
+    lcd_send_cmd(0, 0x3a);
     // 4 line display
-    lcd_send_raw_cmd(0, 0x09);
+    lcd_send_cmd(0, 0x09);
     // Bottom view
-    lcd_send_raw_cmd(0, 0x06);
+    lcd_send_cmd(0, 0x06);
     // Bias setting BS1 = 1
-    lcd_send_raw_cmd(0, 0x1e);
+    lcd_send_cmd(0, 0x1e);
     // function set 8 bit data length, RE=0, IS=0
-    lcd_send_raw_cmd(0, 0x39);
+    lcd_send_cmd(0, 0x39);
     // Set internal oscillator
-    lcd_send_raw_cmd(0, 0x1b);
+    lcd_send_cmd(0, 0x1b);
     // follower control divider on and set value
-    lcd_send_raw_cmd(0, 0x6e);
+    lcd_send_cmd(0, 0x6e);
     // power control booster and set contrast
-    lcd_send_raw_cmd(0, 0x57);
+    lcd_send_cmd(0, 0x57);
     // set the contrast of the screen
-    lcd_send_raw_cmd(0, 0x72);
+    lcd_send_cmd(0, 0x72);
     // function set RE=0, IS=0
-    lcd_send_raw_cmd(0, 0x28);
+    lcd_send_cmd(0, 0x28);
     // Display on
-    lcd_send_raw_cmd(0, 0x0c);
+    lcd_send_cmd(0, 0x0c);
     // Clear the screen
-    lcd_send_raw_cmd(0, 0x01);
+    lcd_send_cmd(0, 0x01);
     // Return to home
-    lcd_send_raw_cmd(0, 0x03);
+    lcd_send_cmd(0, 0x03);
+}
+
+void lcd_write_number(uint16_t number, uint8_t pad)
+{
+    // Do the division
+    uint8_t width = 0;
+    char buffer[5];
+    uint16_t denom = 10;
+    for (uint8_t ii=0; ii<5; ii++)
+    {
+        div_t result = div(number, denom);
+        buffer[ii] = HEX_CHAR(result.rem);
+        number = result.quot;
+        width++;
+        if (number == 0) break;
+    }
+    
+    // Write the value to the screen
+    for (uint8_t ii=pad; ii>width; ii--)
+    {
+        lcd_send_cmd(1, 0x20);
+    }
+    for (uint8_t ii=width; ii>0; ii--)
+    {
+        lcd_send_cmd(1, buffer[ii]);
+    }
+}
+
+void lcd_write_text(char *text)
+{
+    uint8_t text_len = strlen(text);
+    for (uint8_t ii=0; ii<text_len; ii++)
+    {
+        lcd_send_cmd(1, text[ii]);
+    }
 }

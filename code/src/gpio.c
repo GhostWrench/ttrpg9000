@@ -6,6 +6,7 @@
 #include "gpio.h"
 #include "util.h"
 #include "rand.h"
+#include "ui.h"
 
 void gpio_init(void)
 {
@@ -67,8 +68,6 @@ ISR (PCINT0_vect)
         .a = 1,
         .b = 1,
     };
-    static int lpos = 0;
-    static int rpos = 0;
 
     // Use the interrupt to add entropy to the random number generator
     rand_add_entropy();
@@ -84,30 +83,14 @@ ISR (PCINT0_vect)
     EncoderSpin lspin = encoder_state_update(&enl, la, lb);
     EncoderSpin rspin = encoder_state_update(&enr, ra, rb);
 
-
-    // Calculate the new position
-    lpos += lspin;
-    rpos += rspin;
-
-    // Light up LEDS
-    int val = (lpos+rpos) % 3;
-    if (val < 0) val+= 3;
-    switch (val) {
-    case 0:
-        SET_PIN(RLED);
-        CLR_PIN(GLED);
-        CLR_PIN(BLED);
-        break;
-    case 1:
-        CLR_PIN(RLED);
-        SET_PIN(GLED);
-        CLR_PIN(BLED);
-        break;
-    case 2:
-        CLR_PIN(RLED);
-        CLR_PIN(GLED);
-        SET_PIN(BLED);
-        break;
+    if (lspin == CCW_SPIN) {
+        ui_manager(ENL_CCW);
+    } else if (lspin == CW_SPIN) {
+        ui_manager(ENL_CW);
+    } else if (rspin == CCW_SPIN) {
+        ui_manager(ENR_CCW);
+    } else if (rspin == CW_SPIN) {
+        ui_manager(ENR_CW);
     }
 }
 
@@ -131,27 +114,13 @@ ISR (PCINT1_vect)
 
     // Down-press left button clears LEDs
     if (pbl && !pbl_update) {
-        CLR_PIN(RLED);
-        CLR_PIN(GLED);
-        CLR_PIN(BLED);
+        ui_manager(PBL_PRESS);
     }
 
     // Down-press right calculates a random value between 0-7 to display on
     // the LEDS in binary
     if (pbr && !pbr_update) {
-        uint64_t value = (rand_generate() % 8);
-        if (value & (1 << 0))
-            SET_PIN(RLED);
-        else
-            CLR_PIN(RLED);
-        if (value & (1 << 1))
-            SET_PIN(GLED);
-        else
-            CLR_PIN(GLED);
-        if (value & (1 << 2))
-            SET_PIN(BLED);
-        else
-            CLR_PIN(BLED);
+        ui_manager(PBR_PRESS);
     }
 
     // Update states
