@@ -43,7 +43,9 @@ void lcd_send_cmd(uint8_t rs, uint8_t cmd)
 
 void lcd_clear(void)
 {
+    // Clear screen
     lcd_send_cmd(0, 0x01);
+    // Return to home
     lcd_send_cmd(0, 0x03);
 }
 
@@ -98,13 +100,13 @@ void lcd_init(void)
     // set the contrast of the screen
     lcd_send_cmd(0, 0x72);
     // function set RE=0, IS=0
-    lcd_send_cmd(0, 0x28);
-    // function set RE=1
+    lcd_send_cmd(0, 0x38);
+    // function set RE=1, IS=0
     lcd_send_cmd(0, 0x3a);
-    // ROM selection double byte command (ROMA)
+    // ROM selection double byte command (ROM A)
     lcd_send_cmd(0, 0x72);
     lcd_send_cmd(1, 0x00);
-    // function set RE=0
+    // function set RE=0, IS=0
     lcd_send_cmd(0, 0x38);
     // Display on
     lcd_send_cmd(0, 0x0c);

@@ -1,6 +1,10 @@
+#include "config.h"
+#include <util/delay.h>
+
 #include "ui.h"
 #include "lcd.h"
 #include "rand.h"
+#include "util.h"
 
 static enum {
     HOME_SCREEN,
@@ -30,7 +34,7 @@ void ui_home(void)
     lcd_write_text("ARTIFICER DICE");
 }
 
-#define max_dice 30
+#define max_dice 100
 #define dice_types 9
 static const uint8_t side_count[dice_types] = {
     0, 2, 4, 6, 8, 10, 12, 20, 100
@@ -42,6 +46,9 @@ void ui_dice(void)
 {
     screen = DICE_SCREEN;
     lcd_clear();
+    lcd_goto(1, 4);
+    lcd_write_text("Select Roll:");
+    lcd_goto(2, 6);
     lcd_write_number(num_dice, 3, 1);
     lcd_send_cmd(1, 'd');
     lcd_write_number(side_count[die], 3, 0);
@@ -51,6 +58,22 @@ uint8_t rolls[max_dice] = {0};
 
 void do_roll(void)
 {
+    // Light show
+    for (uint8_t ii=0; ii<4; ii++)
+    {
+        CLR_PIN(BLED);
+        SET_PIN(RLED);
+        _delay_ms(100.0);
+        CLR_PIN(RLED);
+        SET_PIN(GLED);
+        _delay_ms(100.0);
+        CLR_PIN(GLED);
+        SET_PIN(BLED);
+        _delay_ms(100.0);
+    }
+    CLR_PIN(BLED);
+
+    // Generate the numbers
     for (uint8_t ii=0; ii<num_dice; ii++)
     {
         uint64_t roll = (rand_generate() % side_count[die]) + 1;
