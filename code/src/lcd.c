@@ -99,6 +99,13 @@ void lcd_init(void)
     lcd_send_cmd(0, 0x72);
     // function set RE=0, IS=0
     lcd_send_cmd(0, 0x28);
+    // function set RE=1
+    lcd_send_cmd(0, 0x3a);
+    // ROM selection double byte command (ROMA)
+    lcd_send_cmd(0, 0x72);
+    lcd_send_cmd(1, 0x00);
+    // function set RE=0
+    lcd_send_cmd(0, 0x38);
     // Display on
     lcd_send_cmd(0, 0x0c);
     // Clear the screen
