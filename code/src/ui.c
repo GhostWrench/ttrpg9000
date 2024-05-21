@@ -58,19 +58,33 @@ void do_roll(void)
     }
 }
 
+#define num_summary_types 3
+static uint8_t summary_type = 1;
 void ui_roll(void)
 {
     screen = ROLL_SCREEN;
     lcd_clear();
     uint16_t total = 0;
+    uint8_t best = 0;
+    uint8_t worst = 127;
     for (uint8_t ii=0; ii<num_dice; ii++)
     {
         total += (uint16_t)rolls[ii];
+        if (rolls[ii] > best) best = rolls[ii];
+        if (rolls[ii] < worst) worst = rolls[ii];
         lcd_write_number(rolls[ii], 4, 1);
     }
     lcd_goto(3,0);
-    lcd_write_text("Total: ");
-    lcd_write_number(total, 10, 0);
+    if (summary_type == 1) {
+        lcd_write_text("Total: ");
+        lcd_write_number(total, 10, 0);
+    } else if (summary_type == 2) {
+        lcd_write_text("Best: ");
+        lcd_write_number(best, 10, 0);
+    } else if (summary_type == 3) {
+        lcd_write_text("Worst: ");
+        lcd_write_number(worst, 10, 0);
+    }
 }
 
 void ui_manager(UIInput input)
@@ -120,7 +134,13 @@ void ui_manager(UIInput input)
             ui_roll();
             break;
         case ENL_CCW:
+            mod_sub(&summary_type, num_summary_types);
+            ui_roll();
+            break;
         case ENL_CW:
+            mod_add(&summary_type, num_summary_types);
+            ui_roll();
+            break;
         case ENR_CCW:
         case ENR_CW:
         default:
