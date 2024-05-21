@@ -24,11 +24,13 @@ void ui_home(void)
 {
     screen = HOME_SCREEN;
     lcd_clear();
-    lcd_write_text("TTRPG");
-    lcd_write_number(9000, 5, 0);
+    lcd_goto(1, 5);
+    lcd_write_text("TTRPG-9000");
+    lcd_goto(2, 3);
+    lcd_write_text("ARTIFICER DICE");
 }
 
-#define max_dice 4
+#define max_dice 15
 #define dice_types 9
 static const uint8_t side_count[dice_types] = {
     0, 2, 4, 6, 8, 10, 12, 20, 100
@@ -46,14 +48,29 @@ void ui_dice(void)
 }
 
 uint8_t rolls[max_dice] = {0};
+
+void do_roll(void)
+{
+    for (uint8_t ii=0; ii<num_dice; ii++)
+    {
+        uint64_t roll = (rand_generate() % side_count[die]) + 1;
+        rolls[ii] = (uint8_t)roll;
+    }
+}
+
 void ui_roll(void)
 {
     screen = ROLL_SCREEN;
     lcd_clear();
+    uint16_t total = 0;
     for (uint8_t ii=0; ii<num_dice; ii++)
     {
+        total += (uint16_t)rolls[ii];
         lcd_write_number(rolls[ii], 4, 1);
     }
+    lcd_goto(3,0);
+    lcd_write_text("Total: ");
+    lcd_write_number(total, 10, 0);
 }
 
 void ui_manager(UIInput input)
@@ -84,11 +101,7 @@ void ui_manager(UIInput input)
             ui_dice();
             break;
         case PBR_PRESS:
-            for (uint8_t ii=0; ii<num_dice; ii++)
-            {
-                uint64_t roll = (rand_generate() % side_count[die]) + 1;
-                rolls[ii] = (uint8_t)roll;
-            }
+            do_roll();
             ui_roll();
             break;
         case PBL_PRESS:
@@ -102,11 +115,14 @@ void ui_manager(UIInput input)
         case PBL_PRESS:
             ui_dice();
             break;
+        case PBR_PRESS:
+            do_roll();
+            ui_roll();
+            break;
         case ENL_CCW:
         case ENL_CW:
         case ENR_CCW:
         case ENR_CW:
-        case PBR_PRESS:
         default:
             break;
         }

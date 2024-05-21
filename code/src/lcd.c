@@ -87,7 +87,7 @@ void lcd_init(void)
     lcd_send_cmd(0, 0x06);
     // Bias setting BS1 = 1
     lcd_send_cmd(0, 0x1e);
-    // function set 8 bit data length, RE=0, IS=0
+    // function set 8 bit data length, RE=0, IS=1
     lcd_send_cmd(0, 0x39);
     // Set internal oscillator
     lcd_send_cmd(0, 0x1b);
@@ -163,4 +163,11 @@ void lcd_write_text(char *text)
     {
         lcd_send_cmd(1, text[ii]);
     }
+}
+
+void lcd_goto(uint8_t row, uint8_t col)
+{
+    uint8_t addr = ((row * 0x20) + col);
+    uint8_t cmd = addr | 0x80;
+    lcd_send_cmd(0, cmd);
 }
