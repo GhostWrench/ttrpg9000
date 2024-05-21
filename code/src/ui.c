@@ -47,7 +47,7 @@ void ui_dice(void)
     screen = DICE_SCREEN;
     lcd_clear();
     lcd_goto(1, 4);
-    lcd_write_text("Select Roll:");
+    lcd_write_text("SELECT ROLL:");
     lcd_goto(2, 6);
     lcd_write_number(num_dice, 3, 1);
     lcd_send_cmd(1, 'd');
@@ -60,20 +60,29 @@ void do_roll(void)
 {
     // Clear the screen
     lcd_clear();
-    // Light show
-    for (uint8_t ii=0; ii<4; ii++)
+    lcd_goto(3,0);
+    // Light and graphics show
+    for (uint8_t ii=0; ii<5; ii++)
     {
-        CLR_PIN(BLED);
+        CLR_PIN(GLED);
         SET_PIN(RLED);
-        _delay_ms(200.0);
+        lcd_send_cmd(1, 0xd0);
+        _delay_ms(100.0);
         CLR_PIN(RLED);
         SET_PIN(GLED);
-        _delay_ms(200.0);
+        lcd_send_cmd(1, 0xd0);
+        _delay_ms(100.0);
         CLR_PIN(GLED);
         SET_PIN(BLED);
-        _delay_ms(200.0);
+        lcd_send_cmd(1, 0xd0);
+        _delay_ms(100.0);
+        CLR_PIN(BLED);
+        SET_PIN(GLED);
+        lcd_send_cmd(1, 0xd0);
+        _delay_ms(100.0);
     }
-    CLR_PIN(BLED);
+    CLR_PIN(GLED);
+    lcd_clear();
 
     // Generate the numbers
     for (uint8_t ii=0; ii<num_dice; ii++)
@@ -150,13 +159,13 @@ void ui_roll(void)
     {
         lcd_goto(3,0);
         if (summary_type == 1) {
-            lcd_write_text("Total: ");
+            lcd_write_text("TOTAL: ");
             lcd_write_number(total, 10, 0);
         } else if (summary_type == 2) {
-            lcd_write_text("Best: ");
+            lcd_write_text("BEST: ");
             lcd_write_number(best, 10, 0);
         } else if (summary_type == 3) {
-            lcd_write_text("Worst: ");
+            lcd_write_text("WORST: ");
             lcd_write_number(worst, 10, 0);
         }
     }
