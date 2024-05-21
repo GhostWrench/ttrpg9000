@@ -58,18 +58,20 @@ uint8_t rolls[max_dice] = {0};
 
 void do_roll(void)
 {
+    // Clear the screen
+    lcd_clear();
     // Light show
     for (uint8_t ii=0; ii<4; ii++)
     {
         CLR_PIN(BLED);
         SET_PIN(RLED);
-        _delay_ms(100.0);
+        _delay_ms(200.0);
         CLR_PIN(RLED);
         SET_PIN(GLED);
-        _delay_ms(100.0);
+        _delay_ms(200.0);
         CLR_PIN(GLED);
         SET_PIN(BLED);
-        _delay_ms(100.0);
+        _delay_ms(200.0);
     }
     CLR_PIN(BLED);
 
@@ -144,16 +146,19 @@ void ui_roll(void)
             }
         }
     }
-    lcd_goto(3,0);
-    if (summary_type == 1) {
-        lcd_write_text("Total: ");
-        lcd_write_number(total, 10, 0);
-    } else if (summary_type == 2) {
-        lcd_write_text("Best: ");
-        lcd_write_number(best, 10, 0);
-    } else if (summary_type == 3) {
-        lcd_write_text("Worst: ");
-        lcd_write_number(worst, 10, 0);
+    if (num_dice > 1)
+    {
+        lcd_goto(3,0);
+        if (summary_type == 1) {
+            lcd_write_text("Total: ");
+            lcd_write_number(total, 10, 0);
+        } else if (summary_type == 2) {
+            lcd_write_text("Best: ");
+            lcd_write_number(best, 10, 0);
+        } else if (summary_type == 3) {
+            lcd_write_text("Worst: ");
+            lcd_write_number(worst, 10, 0);
+        }
     }
 }
 
