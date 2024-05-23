@@ -27,7 +27,7 @@
 			)
 		)
 	)
-	(property "Footprint" ""
+	(property "Footprint" "DOGM204"
 		(at -26.65 19.05 0)
 		(unlocked yes)
 		(layer "F.Fab")
@@ -68,37 +68,15 @@
 	)
 	(attr through_hole)
 	(fp_rect
-		(start -27.666 -20.066)
-		(end 27.706 -18.034)
+		(start -33.25 -20.25)
+		(end 33.25 20.246)
 		(stroke
-			(width 0.1)
+			(width 0.05)
 			(type default)
 		)
 		(fill none)
 		(layer "F.CrtYd")
-		(uuid "c748c072-7915-4f97-82a9-524d7f0a7a65")
-	)
-	(fp_rect
-		(start -27.666 18.034)
-		(end -20.554 20.066)
-		(stroke
-			(width 0.1)
-			(type default)
-		)
-		(fill none)
-		(layer "F.CrtYd")
-		(uuid "4b4c31c0-8b85-49a8-a579-7cbdde638cdb")
-	)
-	(fp_rect
-		(start 20.594 18.034)
-		(end 27.706 20.066)
-		(stroke
-			(width 0.1)
-			(type default)
-		)
-		(fill none)
-		(layer "F.CrtYd")
-		(uuid "a7ae9b41-df95-40b5-9250-ff4a720726fc")
+		(uuid "20c7c336-2afa-480c-b66f-10330d42f0c1")
 	)
 	(fp_rect
 		(start -32.98 -19.05)
