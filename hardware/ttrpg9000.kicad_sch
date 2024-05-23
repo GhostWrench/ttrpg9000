@@ -7,7 +7,7 @@
 	(title_block
 		(title "TTRPG-9000")
 		(date "2024-05-07")
-		(rev "v0.6")
+		(rev "v1.0")
 		(company "Ghost Wrench, LLC")
 	)
 	(lib_symbols
