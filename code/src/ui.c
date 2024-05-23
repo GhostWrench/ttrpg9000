@@ -34,7 +34,7 @@ void ui_home(void)
     lcd_write_text("ARTIFICER DICE");
 }
 
-#define max_dice 100
+#define max_dice 80
 #define dice_types 9
 static const uint8_t side_count[dice_types] = {
     0, 2, 4, 6, 8, 10, 12, 20, 100
@@ -55,11 +55,17 @@ void ui_dice(void)
 }
 
 uint8_t rolls[max_dice] = {0};
+#define num_summary_types 3
+static uint8_t summary_type = 1;
+static uint8_t first_line = 0;
+static uint8_t num_lines = 0;
 
 void do_roll(void)
 {
-    // Clear the screen
+    first_line = 0;
     lcd_clear();
+    lcd_goto(2,0);
+    lcd_write_text("RUNNING SIMULATION");
     lcd_goto(3,0);
     // Light and graphics show
     for (uint8_t ii=0; ii<5; ii++)
@@ -90,12 +96,9 @@ void do_roll(void)
         uint64_t roll = (rand_generate() % side_count[die]) + 1;
         rolls[ii] = (uint8_t)roll;
     }
+    lcd_clear();
 }
 
-#define num_summary_types 3
-static uint8_t summary_type = 1;
-static uint8_t first_line = 0;
-static uint8_t num_lines = 0;
 void ui_roll(void)
 {
     screen = ROLL_SCREEN;
@@ -155,18 +158,24 @@ void ui_roll(void)
             }
         }
     }
+    lcd_goto(3,0);
+    lcd_send_cmd(1, '(');
+    lcd_write_number(num_dice, 2, 1);
+    lcd_send_cmd(1, 'd');
+    lcd_write_number(side_count[die], 3, 0);
+    lcd_send_cmd(1, ')');
     if (num_dice > 1)
     {
-        lcd_goto(3,0);
+        lcd_goto(3, 9);
         if (summary_type == 1) {
             lcd_write_text("TOTAL: ");
-            lcd_write_number(total, 10, 0);
+            lcd_write_number(total, 4, 0);
         } else if (summary_type == 2) {
-            lcd_write_text("BEST: ");
-            lcd_write_number(best, 10, 0);
+            lcd_write_text(" BEST: ");
+            lcd_write_number(best, 4, 0);
         } else if (summary_type == 3) {
             lcd_write_text("WORST: ");
-            lcd_write_number(worst, 10, 0);
+            lcd_write_number(worst, 4, 0);
         }
     }
 }
