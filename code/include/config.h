@@ -23,11 +23,11 @@
 #define ENRA_DDR DDRB
 #define ENRA_PORT PORTB
 #define ENRA_PIN PINB
-#define ENRA_BIT 3
+#define ENRA_BIT 2
 #define ENRB_DDR DDRB
 #define ENRB_PORT PORTB
 #define ENRB_PIN PINB
-#define ENRB_BIT 2
+#define ENRB_BIT 3
 
 // Left pushbutton
 #define PBL_DDR DDRA
@@ -45,19 +45,19 @@
 #define RLED_DDR DDRD
 #define RLED_PORT PORTD
 #define RLED_PIN PIND
-#define RLED_BIT 6
+#define RLED_BIT 5
 
 // Green LED
 #define GLED_DDR DDRD
 #define GLED_PORT PORTD
 #define GLED_PIN PIND
-#define GLED_BIT 5
+#define GLED_BIT 4
 
 // Blue LED
 #define BLED_DDR DDRD
 #define BLED_PORT PORTD
 #define BLED_PIN PIND
-#define BLED_BIT 4
+#define BLED_BIT 6
 
 // LCD reset gpio mapping
 #define LCD_nRESET_DDR DDRD
