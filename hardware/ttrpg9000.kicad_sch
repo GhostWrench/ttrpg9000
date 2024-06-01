@@ -3479,12 +3479,6 @@
 		(uuid "2539647f-51be-4ad9-9806-860576604061")
 	)
 	(junction
-		(at 135.89 69.85)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "43838433-3dbd-4957-8f26-adac898e82f4")
-	)
-	(junction
 		(at 237.49 76.2)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -3500,7 +3494,7 @@
 		(at 135.89 26.67)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "5395e48b-6ded-4451-a5d2-c68a7ab07fb7")
+		(uuid "576988b7-5e42-4698-abe3-b628844aa1b9")
 	)
 	(junction
 		(at 66.04 158.75)
@@ -3555,6 +3549,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "848c4b80-27fe-4dd2-b92d-7484f8173b5b")
+	)
+	(junction
+		(at 135.89 69.85)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "849eaca3-1b10-4541-9e43-07072e476890")
 	)
 	(junction
 		(at 229.87 72.39)
@@ -3834,6 +3834,16 @@
 	)
 	(wire
 		(pts
+			(xy 135.89 62.23) (xy 135.89 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "132486df-abc3-4b9e-885b-fa1de86a2f81")
+	)
+	(wire
+		(pts
 			(xy 157.48 64.77) (xy 154.94 64.77)
 		)
 		(stroke
@@ -3881,6 +3891,16 @@
 			(type default)
 		)
 		(uuid "15f5edab-f874-4c07-be51-9d21184869c1")
+	)
+	(wire
+		(pts
+			(xy 135.89 52.07) (xy 138.43 52.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "16352c6d-498e-43e3-9731-582fc7db8a04")
 	)
 	(wire
 		(pts
@@ -4364,6 +4384,16 @@
 	)
 	(wire
 		(pts
+			(xy 135.89 57.15) (xy 157.48 57.15)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "586d4649-f5de-4924-8675-4bfab868c9aa")
+	)
+	(wire
+		(pts
 			(xy 207.01 45.72) (xy 207.01 43.18)
 		)
 		(stroke
@@ -4494,6 +4524,16 @@
 	)
 	(wire
 		(pts
+			(xy 135.89 54.61) (xy 157.48 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "71206d43-9687-40e5-aaee-661346fd739b")
+	)
+	(wire
+		(pts
 			(xy 232.41 111.76) (xy 232.41 120.65)
 		)
 		(stroke
@@ -4531,16 +4571,6 @@
 			(type default)
 		)
 		(uuid "753f48df-5978-43aa-823f-4396ff9f7362")
-	)
-	(wire
-		(pts
-			(xy 135.89 54.61) (xy 157.48 54.61)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "75c33ea6-2a0e-4fbd-b180-4292ed7700d4")
 	)
 	(wire
 		(pts
@@ -4601,6 +4631,16 @@
 			(type default)
 		)
 		(uuid "7dc915a9-c4f0-43d0-8274-6b96c91c34a1")
+	)
+	(wire
+		(pts
+			(xy 135.89 26.67) (xy 135.89 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7ddba3ec-8be0-45cd-898b-b4e2487dc466")
 	)
 	(wire
 		(pts
@@ -4774,16 +4814,6 @@
 	)
 	(wire
 		(pts
-			(xy 135.89 26.67) (xy 135.89 49.53)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8da48ef2-fc54-41ea-896a-aad5102e9a6a")
-	)
-	(wire
-		(pts
 			(xy 223.52 68.58) (xy 229.87 68.58)
 		)
 		(stroke
@@ -4831,16 +4861,6 @@
 			(type default)
 		)
 		(uuid "926ec290-cc15-4247-bad1-8dcbe30978ab")
-	)
-	(wire
-		(pts
-			(xy 135.89 62.23) (xy 135.89 69.85)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "937ef003-f4b9-4a41-aa43-8aab9431c2d2")
 	)
 	(wire
 		(pts
@@ -5124,13 +5144,13 @@
 	)
 	(wire
 		(pts
-			(xy 135.89 57.15) (xy 157.48 57.15)
+			(xy 135.89 59.69) (xy 157.48 59.69)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "b9877b0d-226c-4c2b-bf9e-15f7bda45aaf")
+		(uuid "ba225fbf-022a-439d-9dd8-45e38c57a98b")
 	)
 	(wire
 		(pts
@@ -5434,16 +5454,6 @@
 	)
 	(wire
 		(pts
-			(xy 135.89 52.07) (xy 138.43 52.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "dc1873ee-abb6-48e3-b8e9-ded37ac77c50")
-	)
-	(wire
-		(pts
 			(xy 132.08 92.71) (xy 132.08 115.57)
 		)
 		(stroke
@@ -5571,16 +5581,6 @@
 			(type default)
 		)
 		(uuid "ec861781-fd2a-436e-863c-9bb9f545e97d")
-	)
-	(wire
-		(pts
-			(xy 135.89 59.69) (xy 157.48 59.69)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ee4977d4-2602-40de-80d5-2d15a6a810da")
 	)
 	(wire
 		(pts
@@ -9824,7 +9824,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Project:RibbonCable_6pos_24AWG_2.54mm"
+		(property "Footprint" "Project:CON_522070660_MOL"
 			(at 106.68 64.77 0)
 			(effects
 				(font
@@ -11031,7 +11031,8 @@
 	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x06")
-		(at 130.81 57.15 180)
+		(at 130.81 54.61 0)
+		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -11039,7 +11040,7 @@
 		(dnp no)
 		(uuid "ca96fd39-d179-48d1-a317-2e3626fcc073")
 		(property "Reference" "J3"
-			(at 129.794 44.196 0)
+			(at 130.81 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11054,8 +11055,8 @@
 				)
 			)
 		)
-		(property "Footprint" "Project:RibbonCable_6pos_24AWG_2.54mm"
-			(at 130.81 57.15 0)
+		(property "Footprint" "Project:CON_522070660_MOL"
+			(at 130.81 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11064,7 +11065,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 130.81 57.15 0)
+			(at 130.81 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11073,7 +11074,7 @@
 			)
 		)
 		(property "Description" "Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)"
-			(at 130.81 57.15 0)
+			(at 130.81 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
