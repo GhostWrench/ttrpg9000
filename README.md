@@ -14,5 +14,5 @@ hours and going).
 
 If you want a unit, but do not have the expertise to fab/solder the PCB, 
 program the software and 3D print the case you can buy on 
-(Etsy)[https://www.etsy.com/listing/1776769027/hand-held-electronic-dice]
+[Etsy](https://www.etsy.com/listing/1776769027/hand-held-electronic-dice)
 from my store. 
