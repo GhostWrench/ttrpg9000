@@ -10,19 +10,16 @@ static enum {
     HOME_SCREEN,
     DICE_SCREEN,
     ROLL_SCREEN,
+    HP_SCREEN,
 } screen = HOME_SCREEN;
 
-void mod_add(uint8_t *num, uint8_t max)
-{
-    (*num)++;
-    if (*num > max) *num = 1;
-}
+#define MOD_INC(num, min, max) \
+    (num)++; \
+    if ((num) < (min) || (num) > (max)) (num) = (min);
 
-void mod_sub(uint8_t *num, uint8_t max)
-{
-    (*num)--;
-    if (*num < 1) *num = max;
-}
+#define MOD_DEC(num, min, max) \
+    (num)--; \
+    if ((num) < (min) || (num) > (max)) (num) = (max);
 
 void ui_home(void)
 {
@@ -34,7 +31,7 @@ void ui_home(void)
     lcd_write_text("ARTIFICER DICE");
 }
 
-#define max_dice 80
+#define max_dice 60
 #define dice_types 9
 static const uint8_t side_count[dice_types] = {
     0, 2, 4, 6, 8, 10, 12, 20, 100
@@ -180,6 +177,21 @@ void ui_roll(void)
     }
 }
 
+static int16_t max_hp = 0;
+static int16_t current_hp = 0;
+
+void ui_hp(void)
+{
+    screen = HP_SCREEN;
+    lcd_clear();
+    lcd_goto(1, 7);
+    lcd_write_text("HP:");
+    lcd_goto(2, 7);
+    lcd_write_number(current_hp, 3, 0);
+    lcd_write_text("/");
+    lcd_write_number(max_hp, 3, 0);
+}
+
 void ui_manager(UIInput input)
 {
     switch (screen)
@@ -192,19 +204,19 @@ void ui_manager(UIInput input)
         switch (input)
         {
         case ENL_CCW:
-            mod_sub(&num_dice, max_dice);
+            MOD_DEC(num_dice, 1, max_dice);
             ui_dice();
             break;
         case ENL_CW:
-            mod_add(&num_dice, max_dice);
+            MOD_INC(num_dice, 1, max_dice);
             ui_dice();
             break;
         case ENR_CCW:
-            mod_sub(&die, dice_types-1);
+            MOD_DEC(die, 1, dice_types-1);
             ui_dice();
             break;
         case ENR_CW:
-            mod_add(&die, dice_types-1);
+            MOD_INC(die, 1, dice_types-1);
             ui_dice();
             break;
         case PBR_PRESS:
@@ -213,6 +225,8 @@ void ui_manager(UIInput input)
             ui_roll();
             break;
         case PBL_PRESS:
+            ui_hp();
+            break;
         default:
             break;
         }
@@ -242,12 +256,42 @@ void ui_manager(UIInput input)
             }
             break;
         case ENR_CCW:
-            mod_sub(&summary_type, num_summary_types);
+            MOD_DEC(summary_type, 1, num_summary_types);
             ui_roll();
             break;
         case ENR_CW:
-            mod_add(&summary_type, num_summary_types);
+            MOD_INC(summary_type, 1, num_summary_types);
             ui_roll();
+            break;
+        default:
+            break;
+        }
+        break;
+    case HP_SCREEN:
+        switch (input)
+        {
+        case PBL_PRESS:
+            current_hp = max_hp;
+            ui_hp();
+            break;
+        case PBR_PRESS:
+            ui_dice();
+            break;
+        case ENL_CCW:
+            MOD_DEC(current_hp, 0, 999);
+            ui_hp();
+            break;
+        case ENL_CW:
+            MOD_INC(current_hp, 0, 999);
+            ui_hp();
+            break;
+        case ENR_CCW:
+            MOD_DEC(max_hp, 1, 999);
+            ui_hp();
+            break;
+        case ENR_CW:
+            MOD_INC(max_hp, 1, 999);
+            ui_hp();
             break;
         default:
             break;
