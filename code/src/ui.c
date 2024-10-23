@@ -34,7 +34,7 @@ void ui_home(void)
     lcd_write_text("ARTIFICER DICE");
 }
 
-#define max_dice 80
+#define max_dice 60
 #define dice_types 9
 static const uint8_t side_count[dice_types] = {
     0, 2, 4, 6, 8, 10, 12, 20, 100
@@ -55,8 +55,9 @@ void ui_dice(void)
 }
 
 uint8_t rolls[max_dice] = {0};
-#define num_summary_types 3
+#define num_summary_types 4
 static uint8_t summary_type = 1;
+static uint8_t count_threshold = 1;
 static uint8_t first_line = 0;
 static uint8_t num_lines = 0;
 
@@ -106,6 +107,7 @@ void ui_roll(void)
     uint16_t total = 0;
     uint8_t best = 0;
     uint8_t worst = 127;
+    uint8_t above_threshold = 0;
     // Calculate the number of lines needed to display all the data
     num_lines = num_dice / 4;
     if ((num_lines * 4) < num_dice ) num_lines++;
@@ -115,6 +117,7 @@ void ui_roll(void)
         total += (uint16_t)rolls[ii];
         if (rolls[ii] > best) best = rolls[ii];
         if (rolls[ii] < worst) worst = rolls[ii];
+        if (rolls[ii] >= count_threshold) above_threshold++;
         if (num_dice <= 15)
         // Write all the numbers, there is room
         {
@@ -176,6 +179,11 @@ void ui_roll(void)
         } else if (summary_type == 3) {
             lcd_write_text("WORST: ");
             lcd_write_number(worst, 4, 0);
+        } else if (summary_type == 4) {
+            lcd_write_text(">=");
+            lcd_write_number(count_threshold, 3, 0);
+            lcd_write_text(": ");
+            lcd_write_number(above_threshold, 4, 0);
         }
     }
 }
@@ -242,11 +250,27 @@ void ui_manager(UIInput input)
             }
             break;
         case ENR_CCW:
-            mod_sub(&summary_type, num_summary_types);
+            if (summary_type == 4 && count_threshold > 1)
+            {
+                count_threshold--;
+            }
+            else 
+            {
+                if (summary_type == 1) count_threshold = side_count[die];
+                mod_sub(&summary_type, num_summary_types);
+            }
             ui_roll();
             break;
         case ENR_CW:
-            mod_add(&summary_type, num_summary_types);
+            if (summary_type == 4 && count_threshold < side_count[die])
+            {
+                count_threshold++;
+            }
+            else
+            {
+                if (summary_type == 3) count_threshold = 1;
+                mod_add(&summary_type, num_summary_types);
+            }
             ui_roll();
             break;
         default:
