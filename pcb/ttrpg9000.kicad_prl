@@ -6,9 +6,8 @@
     "hidden_netclasses": [],
     "hidden_nets": [
       "GND",
-      "+3V3",
       "GND_2",
-      "+3V3_2"
+      "+3V0"
     ],
     "high_contrast_mode": 0,
     "net_color_mode": 1,
