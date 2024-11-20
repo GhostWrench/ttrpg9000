@@ -8789,7 +8789,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Project:Keystone_3025-2"
+		(property "Footprint" "Project:BAT_AAA-BAT-054-P06"
 			(at 50.8 168.656 90)
 			(effects
 				(font
