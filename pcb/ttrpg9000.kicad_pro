@@ -38,8 +38,8 @@
         "other_text_upright": false,
         "pads": {
           "drill": 3.2,
-          "height": 3.2,
-          "width": 3.2
+          "height": 3.6,
+          "width": 3.6
         },
         "silk_line_width": 0.1,
         "silk_text_italic": false,
@@ -79,6 +79,7 @@
         "footprint_type_mismatch": "ignore",
         "hole_clearance": "error",
         "hole_near_hole": "error",
+        "holes_co_located": "warning",
         "invalid_outline": "error",
         "isolated_copper": "warning",
         "item_on_disabled_layer": "error",
@@ -480,7 +481,7 @@
       "idf": "",
       "netlist": "",
       "plot": "fabout/Gerber/",
-      "pos_files": "",
+      "pos_files": "fabout/",
       "specctra_dsn": "",
       "step": "",
       "svg": "",
@@ -490,6 +491,7 @@
   },
   "schematic": {
     "annotate_start_num": 0,
+    "bom_export_filename": "",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
       "field_delimiter": ",",
