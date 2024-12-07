@@ -8201,6 +8201,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC Part #" "C1848"
+			(at 59.69 158.75 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "449c8911-44ca-42cc-bfc9-e033f4a2cdf9")
 		)

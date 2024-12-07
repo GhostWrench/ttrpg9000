@@ -191,7 +191,7 @@
 	)
 	(fp_circle
 		(center 0 -8)
-		(end 0.6 -8)
+		(end 0.8 -8)
 		(stroke
 			(width 0.05)
 			(type default)
@@ -202,7 +202,7 @@
 	)
 	(fp_circle
 		(center 0 8)
-		(end 0.4 8)
+		(end 0.6 8)
 		(stroke
 			(width 0.05)
 			(type default)
