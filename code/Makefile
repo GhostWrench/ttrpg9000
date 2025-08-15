@@ -4,7 +4,7 @@ SHELL = /bin/sh
 # Project configuration
 PROJECT_NAME := ttrpg9000
 VERSION_MAJOR := 1
-VERSION_MINOR := 0
+VERSION_MINOR := 1
 MCU ?= attiny4313
 ISP ?= usbasp
 SHADOWRUN ?= 0
