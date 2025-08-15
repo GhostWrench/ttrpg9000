@@ -8,6 +8,11 @@
 // Processor frequency
 #define F_CPU 1000000UL
 
+// Shadow-run style summary functions
+#ifndef SHADOWRUN_SUMMARY_FUNCTIONS
+#define SHADOWRUN_SUMMARY_FUNCTIONS 0
+#endif
+
 // Peripheral mapping
 // Left encoder
 #define ENLA_DDR DDRB

@@ -55,7 +55,12 @@ void ui_dice(void)
 }
 
 uint8_t rolls[max_dice] = {0};
+#if SHADOWRUN_SUMMARY_FUNCTIONS
+#define num_summary_types 2
+static uint8_t count_threshold = 1;
+#else
 #define num_summary_types 3
+#endif // SHADOWRUN_SUMMARY_FUNCTIONS
 static uint8_t summary_type = 1;
 static uint8_t first_line = 0;
 static uint8_t num_lines = 0;
@@ -90,8 +95,12 @@ void ui_roll(void)
     screen = ROLL_SCREEN;
     lcd_clear();
     uint16_t total = 0;
+#if SHADOWRUN_SUMMARY_FUNCTIONS
+    uint8_t above_threshold = 0;
+#else
     uint8_t best = 0;
     uint8_t worst = 127;
+#endif // SHADOWRUN_SUMMARY_FUNCTIONS
     // Calculate the number of lines needed to display all the data
     num_lines = num_dice / 4;
     if ((num_lines * 4) < num_dice ) num_lines++;
@@ -99,8 +108,12 @@ void ui_roll(void)
     for (uint8_t ii=0; ii<num_dice; ii++)
     {
         total += (uint16_t)rolls[ii];
+#if SHADOWRUN_SUMMARY_FUNCTIONS
+        if (rolls[ii] >= count_threshold) above_threshold++;
+#else
         if (rolls[ii] > best) best = rolls[ii];
         if (rolls[ii] < worst) worst = rolls[ii];
+#endif // SHADOWRUN_SUMMARY_FUNCTIONS
         if (num_dice <= 15)
         // Write all the numbers, there is room
         {
@@ -156,13 +169,24 @@ void ui_roll(void)
         if (summary_type == 1) {
             lcd_write_text("TOTAL: ");
             lcd_write_number(total, 4, 0);
-        } else if (summary_type == 2) {
+        }
+#if SHADOWRUN_SUMMARY_FUNCTIONS
+        else if (summary_type == 2) {
+            lcd_write_text(">=");
+            lcd_write_number(count_threshold, 3, 0);
+            lcd_write_text(": ");
+            lcd_write_number(above_threshold, 4, 0);
+        }
+#else
+        else if (summary_type == 2) {
             lcd_write_text(" BEST: ");
             lcd_write_number(best, 4, 0);
-        } else if (summary_type == 3) {
+        } 
+        else if (summary_type == 3) {
             lcd_write_text("WORST: ");
             lcd_write_number(worst, 4, 0);
         }
+#endif // SHADOWRUN_SUMMARY_FUNCTIONS
     }
 }
 
@@ -228,11 +252,29 @@ void ui_manager(UIInput input)
             }
             break;
         case ENR_CCW:
+#if SHADOWRUN_SUMMARY_FUNCTIONS
+            if (summary_type == 2 && count_threshold > 1) {
+                count_threshold--;
+            } else {
+                count_threshold = side_count[die];
+                mod_sub(&summary_type, num_summary_types);
+            }
+#else
             mod_sub(&summary_type, num_summary_types);
+#endif // SHADOWRUN_SUMMARY_FUNCTIONS
             ui_roll();
             break;
         case ENR_CW:
+#if SHADOWRUN_SUMMARY_FUNCTIONS
+            if (summary_type == 2 && count_threshold < side_count[die]) {
+                count_threshold++;
+            } else {
+                count_threshold = 1;
+                mod_add(&summary_type, num_summary_types);
+            }
+#else
             mod_add(&summary_type, num_summary_types);
+#endif // SHADOWRUN_SUMMARY_FUNCTIONS
             ui_roll();
             break;
         default:

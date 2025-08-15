@@ -7,9 +7,13 @@ VERSION_MAJOR := 1
 VERSION_MINOR := 0
 MCU ?= attiny4313
 ISP ?= usbasp
+SHADOWRUN ?= 0
 
 # Flags
 CFLAGS := -Wall -Wextra -Wpedantic -Os -mmcu=$(MCU) -I./include
+ifeq (${SHADOWRUN}, 1)
+CFLAGS += -DSHADOWRUN_SUMMARY_FUNCTIONS=1
+endif
 
 # Project directories
 SRCDIR := src
