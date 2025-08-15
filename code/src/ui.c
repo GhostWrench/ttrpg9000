@@ -68,22 +68,8 @@ void do_roll(void)
     lcd_write_text("RUNNING SIMULATION");
     lcd_goto(3,0);
     // Light and graphics show
-    for (uint8_t ii=0; ii<5; ii++)
+    for (uint8_t ii=0; ii<20; ii++)
     {
-        CLR_PIN(GLED);
-        SET_PIN(RLED);
-        lcd_send_cmd(1, 0xd0);
-        _delay_ms(100.0);
-        CLR_PIN(RLED);
-        SET_PIN(GLED);
-        lcd_send_cmd(1, 0xd0);
-        _delay_ms(100.0);
-        CLR_PIN(GLED);
-        SET_PIN(BLED);
-        lcd_send_cmd(1, 0xd0);
-        _delay_ms(100.0);
-        CLR_PIN(BLED);
-        SET_PIN(GLED);
         lcd_send_cmd(1, 0xd0);
         _delay_ms(100.0);
     }

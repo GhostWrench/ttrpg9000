@@ -10,14 +10,6 @@
 
 void gpio_init(void)
 {
-    // Set the LEDs to output
-    OUTPUT_PIN(RLED);
-    CLR_PIN(RLED);
-    OUTPUT_PIN(GLED);
-    CLR_PIN(GLED);
-    OUTPUT_PIN(BLED);
-    CLR_PIN(BLED);
-
     // Set encoder and push button pins to input with pullup resistor
     INPUT_PIN(ENLA);
     SET_PIN(ENLA);
