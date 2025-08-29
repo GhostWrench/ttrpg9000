@@ -35,11 +35,19 @@ void ui_home(void)
 }
 
 #define max_dice 80
+#if SHADOWRUN_SUMMARY_FUNCTIONS
+#define dice_types 1
+static const uint8_t side_count[dice_types] = {
+    6
+};
+static uint8_t die = 0;
+#else
 #define dice_types 9
 static const uint8_t side_count[dice_types] = {
     0, 2, 4, 6, 8, 10, 12, 20, 100
 };
 static uint8_t die = 7;
+#endif // SHADOWRUN_SUMMARY_FUNCTIONS
 static uint8_t num_dice = 1;
 
 void ui_dice(void)
@@ -57,7 +65,6 @@ void ui_dice(void)
 uint8_t rolls[max_dice] = {0};
 #if SHADOWRUN_SUMMARY_FUNCTIONS
 #define num_summary_types 2
-static uint8_t count_threshold = 1;
 #else
 #define num_summary_types 3
 #endif // SHADOWRUN_SUMMARY_FUNCTIONS
@@ -96,7 +103,8 @@ void ui_roll(void)
     lcd_clear();
     uint16_t total = 0;
 #if SHADOWRUN_SUMMARY_FUNCTIONS
-    uint8_t above_threshold = 0;
+    uint8_t hits = 0;
+    uint8_t glitch = 0;
 #else
     uint8_t best = 0;
     uint8_t worst = 127;
@@ -109,7 +117,8 @@ void ui_roll(void)
     {
         total += (uint16_t)rolls[ii];
 #if SHADOWRUN_SUMMARY_FUNCTIONS
-        if (rolls[ii] >= count_threshold) above_threshold++;
+        if (rolls[ii] == 1) glitch++;
+        if (rolls[ii] >= 5) hits++;
 #else
         if (rolls[ii] > best) best = rolls[ii];
         if (rolls[ii] < worst) worst = rolls[ii];
@@ -163,7 +172,9 @@ void ui_roll(void)
     lcd_send_cmd(1, 'd');
     lcd_write_number(side_count[die], 3, 0);
     lcd_send_cmd(1, ')');
+#if !SHADOWRUN_SUMMARY_FUNCTIONS
     if (num_dice > 1)
+#endif // SHADOWRUN_SUMMARY_FUNCTIONS
     {
         lcd_goto(3, 9);
         if (summary_type == 1) {
@@ -172,10 +183,10 @@ void ui_roll(void)
         }
 #if SHADOWRUN_SUMMARY_FUNCTIONS
         else if (summary_type == 2) {
-            lcd_write_text(">=");
-            lcd_write_number(count_threshold, 3, 0);
-            lcd_write_text(": ");
-            lcd_write_number(above_threshold, 4, 0);
+            lcd_write_text("H: ");
+            lcd_write_number(hits, 3, 0);
+            lcd_write_text(" G: ");
+            lcd_write_text(glitch > (num_dice >> 1) ? "Y" : "N");
         }
 #else
         else if (summary_type == 2) {
@@ -252,29 +263,11 @@ void ui_manager(UIInput input)
             }
             break;
         case ENR_CCW:
-#if SHADOWRUN_SUMMARY_FUNCTIONS
-            if (summary_type == 2 && count_threshold > 1) {
-                count_threshold--;
-            } else {
-                count_threshold = side_count[die];
-                mod_sub(&summary_type, num_summary_types);
-            }
-#else
             mod_sub(&summary_type, num_summary_types);
-#endif // SHADOWRUN_SUMMARY_FUNCTIONS
             ui_roll();
             break;
         case ENR_CW:
-#if SHADOWRUN_SUMMARY_FUNCTIONS
-            if (summary_type == 2 && count_threshold < side_count[die]) {
-                count_threshold++;
-            } else {
-                count_threshold = 1;
-                mod_add(&summary_type, num_summary_types);
-            }
-#else
             mod_add(&summary_type, num_summary_types);
-#endif // SHADOWRUN_SUMMARY_FUNCTIONS
             ui_roll();
             break;
         default:
