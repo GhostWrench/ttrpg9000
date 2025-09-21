@@ -4,7 +4,7 @@ SHELL = /bin/sh
 # Project configuration
 PROJECT_NAME := ttrpg9000
 VERSION_MAJOR := 1
-VERSION_MINOR := 1
+VERSION_MINOR := 2
 MCU ?= attiny4313
 ISP ?= usbasp
 SHADOWRUN ?= 0
@@ -12,7 +12,9 @@ SHADOWRUN ?= 0
 # Flags
 CFLAGS := -Wall -Wextra -Wpedantic -Os -mmcu=$(MCU) -I./include
 ifeq (${SHADOWRUN}, 1)
-CFLAGS += -DSHADOWRUN_SUMMARY_FUNCTIONS=1
+CFLAGS += -DDEFAULT_GAME_MODE=1
+else
+CFLAGS += -DDEFAULT_GAME_MODE=0
 endif
 
 # Project directories

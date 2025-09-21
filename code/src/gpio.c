@@ -31,6 +31,14 @@ void gpio_init(void)
     sei();
 }
 
+bool gpio_pbl() {
+    return !READ_PIN(PBL);
+}
+
+bool gpio_pbr() {
+    return !READ_PIN(PBR);
+}
+
 // Function to detect if the encoder is spinning CW or CCW and to keep 
 // accurate state
 EncoderSpin encoder_state_update(EncoderState *state, uint8_t a, uint8_t b)

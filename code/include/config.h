@@ -9,8 +9,13 @@
 #define F_CPU 1000000UL
 
 // Shadow-run style summary functions
-#ifndef SHADOWRUN_SUMMARY_FUNCTIONS
-#define SHADOWRUN_SUMMARY_FUNCTIONS 0
+typedef enum {
+    GAME_MODE_STANDARD,
+    GAME_MODE_SHADOWRUN,
+} GameMode;
+
+#ifndef DEFAULT_GAME_MODE
+#define DEFAULT_GAME_MODE GAME_MODE_STANDARD
 #endif
 
 // Peripheral mapping
@@ -69,5 +74,15 @@
 #define LCD_nRESET_PORT PORTD
 #define LCD_nRESET_PIN PIND
 #define LCD_nRESET_BIT 3
+
+/**
+ * Initialize the game config
+ */
+void config_init();
+
+/**
+ * Get the game mode which the device is operating in
+ */
+GameMode config_game_mode();
 
 #endif // TTRPG9000_CONFIG_H

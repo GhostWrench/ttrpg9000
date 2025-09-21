@@ -14,6 +14,7 @@ int main(void)
 {
     rand_init();
     gpio_init();
+    config_init();
     lcd_init();
 
     // Clear the screen

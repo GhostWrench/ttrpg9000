@@ -7,6 +7,7 @@
 #define TTRPG9000_GPIO_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 // Global state of the left and right encoders
 typedef struct {
@@ -24,5 +25,19 @@ typedef enum {
  * Initialize the GPIO ports
  */
 void gpio_init();
+
+/**
+ * Get the state of the left pushbutton
+ * 
+ * @return true if pressed, false if not
+ */
+bool gpio_pbl();
+
+/**
+ * Get the state of the right pushbutton
+ * 
+ * @return true if pressed, false if not
+ */
+bool gpio_pbr();
 
 #endif // TTRPG9000_GPIO_H
