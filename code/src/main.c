@@ -3,6 +3,8 @@
  * top RPG dice rolling computer
  */
 
+#include <util/delay.h>
+
 #include "config.h"
 #include "gpio.h"
 #include "lcd.h"
@@ -14,6 +16,7 @@ int main(void)
 {
     rand_init();
     gpio_init();
+    _delay_ms(10.0);
     config_init();
     lcd_init();
 

@@ -13,8 +13,6 @@ SHADOWRUN ?= 0
 CFLAGS := -Wall -Wextra -Wpedantic -Os -mmcu=$(MCU) -I./include
 ifeq (${SHADOWRUN}, 1)
 CFLAGS += -DDEFAULT_GAME_MODE=1
-else
-CFLAGS += -DDEFAULT_GAME_MODE=0
 endif
 
 # Project directories
