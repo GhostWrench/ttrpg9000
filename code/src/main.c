@@ -3,9 +3,10 @@
  * top RPG dice rolling computer
  */
 
+#include "config.h"
+
 #include <util/delay.h>
 
-#include "config.h"
 #include "gpio.h"
 #include "lcd.h"
 #include "util.h"
