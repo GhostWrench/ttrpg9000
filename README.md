@@ -1,18 +1,40 @@
 # TTRPG-9000
 
-![TTRPG-9000](img/4ColorDice.png)
+![TTRPG-9000](img/StandardSet.png)
+![TTRPG-9000SR](img/ShadowrunSet.png)
 
-The TTRPG-9000 is an open-hardware and open-source handheld electronic dice 
-rolling computer for table top RPGs. It allows the user to select NdM to roll
-and shows the result of each individual roll as well as the total. A psuedo 
-random number generator is seeded/updated via both the clock and user 
-interactions with the board making for good randomness in the output. It runs 
-off of 2 1.5V CR2302 batteries and has a very good battery life (tested to 40+ 
-hours and going). 
+The TTRPG-9000 is an open-hardware and open-source handheld electronic dicerolling computer for table top RPGs. It allows the user to select NdM to roll and shows the result of each individual roll as well as the total. Dice available are d2, d4, d6, d8, d10, d12, d20 and d100. A psuedo random number generator is seeded/updated via both the clock and user interactions with the board making for good randomness in the output. It runs off of a single 1.5V CR2302 battery and has a very good battery life (tested to 80+ hours and going). Due to requests from a lot of Shadowrun players there is a special Shadowrun software build option that adds a summary mode for hits and glitches as well as a boot mode (turn on the power while holding down an encoder) that makes it work just like the original version.
 
-## Where to Buy
+## Build and installation
 
-If you want a unit, but do not have the expertise to fab/solder the PCB, 
-program the software and 3D print the case you can buy on 
-[Etsy](https://www.etsy.com/listing/1776769027/hand-held-electronic-dice)
-from my store. 
+To build and install, you will need a Linux computer with gcc-avr, binutils-avr avr-libc and avrdude installed. (I'm sure you can do it on Windows too, but you are on your own)
+
+### Build (Standard)
+
+```bash
+$ cd code
+$ make
+```
+
+### Build (Shadowrun)
+
+```bash
+$ cd code
+$ SHADOWRUN=1 make
+```
+
+### Software installation
+
+To install you will need an AVR programmer, attach to the 6 pin AVR programming port by soldering on a header or using a Pogo adapter. Then run
+
+```bash
+$ make flash
+```
+
+## Buy on Etsy
+
+Support me and my work by buying a pre-fabricated unit on Etsy!
+
+[Standard Edition](https://www.etsy.com/listing/1792348298/artificer-dice-electronic-dice-for-dd)
+
+[Shadowrun Edition](https://www.etsy.com/listing/4419946141/ttrpg-9000-shadowrun-edition-electronic)
