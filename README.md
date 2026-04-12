@@ -25,7 +25,7 @@ $ SHADOWRUN=1 make
 
 ### Software installation
 
-To install you will need an AVR programmer, attach to the 6 pin AVR programming port by soldering on a header or using a Pogo adapter. Then run
+To install you will need an AVR programmer (make sure it is set to 3v3 programming mode, usually with a jumper). Attach to the 6 pin AVR programming port by soldering on a header or using a Pogo adapter. The run
 
 ```bash
 $ make flash
