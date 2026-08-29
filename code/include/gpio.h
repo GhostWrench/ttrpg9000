@@ -24,20 +24,20 @@ typedef enum {
 /**
  * Initialize the GPIO ports
  */
-void gpio_init();
+void gpio_init(void);
 
 /**
  * Get the state of the left pushbutton
  * 
  * @return true if pressed, false if not
  */
-bool gpio_pbl();
+bool gpio_pbl(void);
 
 /**
  * Get the state of the right pushbutton
  * 
  * @return true if pressed, false if not
  */
-bool gpio_pbr();
+bool gpio_pbr(void);
 
 #endif // TTRPG9000_GPIO_H

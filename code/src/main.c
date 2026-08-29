@@ -5,6 +5,7 @@
 
 #include "config.h"
 
+#include <avr/sleep.h>
 #include <util/delay.h>
 
 #include "gpio.h"
@@ -21,13 +22,18 @@ int main(void)
     config_init();
     lcd_init();
 
-    // Clear the screen
-    lcd_send_cmd(0, 0x01);
-    // Return to home
-    lcd_send_cmd(0, 0x03);
+    // Clear the screen and return to home
+    lcd_clear();
 
     // Show the home screen
     ui_home();
 
-    while (1) {} // Loop forever
+    // Sleep the CPU until an interrupt (encoder or button) wakes it
+    // Idle mode keeps the timer and peripherals running so entropy
+    // collection and delays keep working while the CPU is asleep
+    set_sleep_mode(SLEEP_MODE_IDLE);
+    while (1)
+    {
+        sleep_mode();
+    }
 }

@@ -19,7 +19,7 @@ void lcd_clear(void);
 
 void lcd_write_number(uint16_t number, int8_t pad, int8_t just);
 
-void lcd_write_text(char *text);
+void lcd_write_text(const char *text);
 
 void lcd_goto(uint8_t row, uint8_t col);
 

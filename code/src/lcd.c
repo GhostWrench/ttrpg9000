@@ -1,4 +1,5 @@
 #include "config.h"
+#include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,15 +20,6 @@ void spi_put_byte(uint8_t byte, uint8_t *resp)
         while (!(GET_BIT(UCSRA, RXC)));
         *resp = UDR;
     }
-}
-
-uint8_t lcd_get_data(uint8_t rs)
-{
-    uint8_t resp = 0;
-    uint8_t cmd = 0x3f;
-    if (rs) SET_BIT(cmd, 6);
-    spi_put_byte(cmd, &resp);
-    return resp;
 }
 
 void lcd_send_cmd(uint8_t rs, uint8_t cmd)
@@ -110,10 +102,8 @@ void lcd_init(void)
     lcd_send_cmd(0, 0x38);
     // Display on
     lcd_send_cmd(0, 0x0c);
-    // Clear the screen
-    lcd_send_cmd(0, 0x01);
-    // Return to home
-    lcd_send_cmd(0, 0x03);
+    // Clear the screen and return to home
+    lcd_clear();
 }
 
 void lcd_write_number(uint16_t number, int8_t pad, int8_t just)
@@ -165,7 +155,7 @@ void lcd_write_number(uint16_t number, int8_t pad, int8_t just)
     }
 }
 
-void lcd_write_text(char *text)
+void lcd_write_text(const char *text)
 {
     int8_t text_len = strlen(text);
     for (int8_t ii=0; ii<text_len; ii++)

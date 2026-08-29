@@ -13,12 +13,12 @@ static enum {
 } screen = HOME_SCREEN;
 
 // Setup values used for different game modes
-#define max_dice 64
-#define max_dice_types 9
-static const uint8_t side_count[max_dice_types] = {
+#define MAX_DICE 64
+#define MAX_DICE_TYPES 9
+static const uint8_t side_count[MAX_DICE_TYPES] = {
     0, 6, 8, 10, 12, 20, 100, 2, 4
 };
-static uint8_t dice_types = max_dice_types;
+static uint8_t dice_types = MAX_DICE_TYPES;
 static uint8_t side_select = 5;
 static uint8_t num_summary_types = 3;
 static uint8_t num_dice = 1;
@@ -40,7 +40,7 @@ void ui_home(void)
     screen = HOME_SCREEN;
     switch (config_game_mode()) {
         case GAME_MODE_STANDARD:
-            dice_types = max_dice_types;
+            dice_types = MAX_DICE_TYPES;
             side_select = 5;
             num_summary_types = 3;
             break;
@@ -69,7 +69,7 @@ void ui_dice(void)
     lcd_write_number(side_count[side_select], 3, 0);
 }
 
-uint8_t rolls[max_dice] = {0};
+static uint8_t rolls[MAX_DICE] = {0};
 static uint8_t summary_type = 1;
 static uint8_t first_line = 0;
 static uint8_t num_lines = 0;
@@ -204,11 +204,11 @@ void ui_manager(UIInput input)
         switch (input)
         {
         case ENL_CCW:
-            mod_sub(&num_dice, max_dice);
+            mod_sub(&num_dice, MAX_DICE);
             ui_dice();
             break;
         case ENL_CW:
-            mod_add(&num_dice, max_dice);
+            mod_add(&num_dice, MAX_DICE);
             ui_dice();
             break;
         case ENR_CCW:

@@ -29,7 +29,7 @@ typedef enum {
 #define ENLB_PIN PINB
 #define ENLB_BIT 1
 
-// Right encoder A and B outputs CURRENTLY REVERSED for v0.4 board development
+// Right encoder A and B outputs
 #define ENRA_DDR DDRB
 #define ENRA_PORT PORTB
 #define ENRA_PIN PINB
@@ -78,11 +78,11 @@ typedef enum {
 /**
  * Initialize the game config
  */
-void config_init();
+void config_init(void);
 
 /**
  * Get the game mode which the device is operating in
  */
-GameMode config_game_mode();
+GameMode config_game_mode(void);
 
 #endif // TTRPG9000_CONFIG_H
