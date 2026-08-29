@@ -19,6 +19,7 @@ endif
 SRCDIR := src
 INCDIR := include
 BUILDDIR := build
+DOCS_DIR := docs
 
 # Find files
 EXEC = $(BUILDDIR)/$(PROJECT_NAME)_v$(VERSION_MAJOR).$(VERSION_MINOR)
@@ -26,7 +27,7 @@ SRCS = $(wildcard $(SRCDIR)/*.c)
 HDRS = $(wildcard $(INCDIR)/*.h)
 OBJS = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRCS))
 
-.PHONY: clean read-fuses write-fuses flash
+.PHONY: clean read-fuses write-fuses flash docs
 
 all: $(EXEC).hex
 
@@ -40,6 +41,9 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.c $(HDRS)
 	@mkdir -p $(BUILDDIR)
 	avr-gcc $(CFLAGS) -c -o $@ $<
 
+docs:
+	doxygen Doxyfile
+
 read-fuses:
 	avrdude -v -p $(MCU) -c $(ISP) -b 19200 -U lfuse:r:-:h
 
@@ -52,4 +56,4 @@ flash: $(EXEC).hex
 	avrdude -v -p $(MCU) -c $(ISP) -b 19200 -U flash:w:$(EXEC).hex:i
 
 clean:
-	rm -rf build/*
+	rm -rf build/* $(DOCS_DIR)

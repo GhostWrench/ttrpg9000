@@ -1,13 +1,23 @@
+/**
+ * @file config.c
+ * @addtogroup ttrpg9000_config
+ *
+ * Implementation of the configuration module, see config.h.
+ */
+
 #include <stdint.h>
 
 #include "config.h"
 #include "gpio.h"
 
-// Global settings
+/**
+ * @ingroup ttrpg9000_config
+ * @brief Active game mode of the device.
+ */
 static GameMode game_mode = DEFAULT_GAME_MODE;
 
 void config_init() {
-    // If one of the encoders is held down, revert to the standard game mode
+    // If a pushbutton is held down at boot, revert to the standard mode
     if (gpio_pbl() || gpio_pbr()) {
         game_mode = GAME_MODE_STANDARD;
     }

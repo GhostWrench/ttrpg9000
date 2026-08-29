@@ -1,3 +1,10 @@
+/**
+ * @file lcd.c
+ * @addtogroup ttrpg9000_lcd
+ *
+ * Implementation of the LCD display module, see lcd.h.
+ */
+
 #include "config.h"
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -7,8 +14,20 @@
 #include "lcd.h"
 #include "util.h"
 
+/**
+ * @ingroup ttrpg9000_lcd
+ * @brief Convert a hex digit (0-15) to its ASCII character representation.
+ */
 #define HEX_CHAR(VALUE) ((VALUE) > 0x09 ? (VALUE)+0x37 : (VALUE)+0x30)
 
+/**
+ * @ingroup ttrpg9000_lcd
+ * @brief Write a byte to the LCD over the USART in SPI mode.
+ *
+ * @param byte The byte to transmit.
+ * @param resp If not NULL, the byte received while transmitting is
+ *             stored at this address.
+ */
 void spi_put_byte(uint8_t byte, uint8_t *resp)
 {
     // Wait for transmit buffer to be available
@@ -71,7 +90,7 @@ void lcd_init(void)
     _delay_ms(0.2);
     SET_PIN(LCD_nRESET);
     _delay_ms(50.0);
-    
+
     // Send the commands recommended to start the screen up
     // Set 8 bit data length, RE=1, REV=0
     lcd_send_cmd(0, 0x3a);
@@ -120,7 +139,7 @@ void lcd_write_number(uint16_t number, int8_t pad, int8_t just)
         width++;
         if (number == 0) break;
     }
-    
+
     // Write the value to the screen
     if (width > pad)
     // Value doesn't fit, write ## to indicate error

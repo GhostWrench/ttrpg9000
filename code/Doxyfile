@@ -1,0 +1,31 @@
+# Doxyfile for the TTRPG-9000 firmware
+#
+# Build the documentation with "make docs", the output is written to
+# docs/html/index.html
+
+PROJECT_NAME           = "TTRPG-9000"
+PROJECT_BRIEF          = "Tabletop RPG dice rolling computer"
+PROJECT_NUMBER         = 1.2
+OUTPUT_DIRECTORY       = docs
+
+# Input
+INPUT                  = include src
+FILE_PATTERNS          = *.c *.h
+RECURSIVE              = YES
+
+# Extraction
+EXTRACT_ALL            = YES
+EXTRACT_STATIC         = YES
+OPTIMIZE_OUTPUT_FOR_C  = YES
+TYPEDEF_HIDES_STRUCT   = YES
+TAB_SIZE               = 4
+# The AVR ISR macro does not expand for the parser, exclude the
+# resulting pseudo functions from the documentation
+EXCLUDE_SYMBOLS        = ISR
+
+# Output
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+
+# Diagnostics
+WARNINGS               = YES

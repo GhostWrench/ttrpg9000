@@ -1,3 +1,10 @@
+/**
+ * @file ui.c
+ * @addtogroup ttrpg9000_ui
+ *
+ * Implementation of the user interface module, see ui.h.
+ */
+
 #include "config.h"
 #include <util/delay.h>
 
@@ -6,29 +13,115 @@
 #include "rand.h"
 #include "util.h"
 
+// -----------------------------------------------------------------------------
+// Module state variables
+// -----------------------------------------------------------------------------
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief The screens the UI can currently display.
+ */
 static enum {
+    /** Title screen shown at boot. */
     HOME_SCREEN,
+    /** Screen for selecting the number of dice and the dice type. */
     DICE_SCREEN,
+    /** Screen showing the result of a roll. */
     ROLL_SCREEN,
 } screen = HOME_SCREEN;
 
-// Setup values used for different game modes
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Maximum number of dice that can be rolled at once.
+ */
 #define MAX_DICE 64
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Number of entries in the dice side count table.
+ */
 #define MAX_DICE_TYPES 9
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Number of sides for every supported dice type.
+ *
+ * Indexed by the dice type selector. Index 0 is unused so the selector
+ * starts at 1.
+ */
 static const uint8_t side_count[MAX_DICE_TYPES] = {
     0, 6, 8, 10, 12, 20, 100, 2, 4
 };
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Number of available dice types in the current game mode.
+ */
 static uint8_t dice_types = MAX_DICE_TYPES;
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Index into the side count table of the selected dice type.
+ */
 static uint8_t side_select = 5;
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Number of summary types available in the current game mode.
+ */
 static uint8_t num_summary_types = 3;
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Number of dice selected by the user.
+ */
 static uint8_t num_dice = 1;
 
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Individual results of the last roll, one entry per die.
+ */
+static uint8_t rolls[MAX_DICE] = {0};
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Index of the selected summary type (1 based).
+ */
+static uint8_t summary_type = 1;
+
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief First result line currently displayed (pagination).
+ */
+static uint8_t first_line = 0;
+
+/**
+ * @ingroup ttrpg9000_ui 
+ * @brief Number of result lines needed for the last roll.
+ */
+static uint8_t num_lines = 0;
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Increment a value with wraparound.
+ *
+ * @param num Pointer to the value to increment.
+ * @param max Maximum value, incrementing past it wraps to 1.
+ */
 void mod_add(uint8_t *num, uint8_t max)
 {
     (*num)++;
     if (*num > max) *num = 1;
 }
 
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Decrement a value with wraparound.
+ *
+ * @param num Pointer to the value to decrement.
+ * @param max Maximum value, decrementing below 1 wraps to max.
+ */
 void mod_sub(uint8_t *num, uint8_t max)
 {
     (*num)--;
@@ -57,6 +150,14 @@ void ui_home(void)
     lcd_write_text("ARTIFICER DICE");
 }
 
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Show the dice selection screen.
+ *
+ * Displays the current roll setup as "NdM"; the number of dice and
+ * the dice type are changed with the left and right encoder
+ * respectively.
+ */
 void ui_dice(void)
 {
     screen = DICE_SCREEN;
@@ -69,11 +170,14 @@ void ui_dice(void)
     lcd_write_number(side_count[side_select], 3, 0);
 }
 
-static uint8_t rolls[MAX_DICE] = {0};
-static uint8_t summary_type = 1;
-static uint8_t first_line = 0;
-static uint8_t num_lines = 0;
-
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Roll the currently configured dice.
+ *
+ * Shows a brief rolling animation on the display and then fills the
+ * roll buffer with random values in the range 1 to the number of
+ * sides of the selected dice.
+ */
 void do_roll(void)
 {
     first_line = 0;
@@ -99,6 +203,16 @@ void do_roll(void)
     lcd_clear();
 }
 
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Show the roll results screen.
+ *
+ * Displays every individual roll together with a summary line. If
+ * more than 15 dice are rolled the results are paginated, twelve per
+ * screen. The summary shown depends on the selected summary type:
+ * total, best, worst or (Shadowrun mode) hits and whether the roll
+ * glitched (more than half of the dice showing 1).
+ */
 void ui_roll(void)
 {
     screen = ROLL_SCREEN;
@@ -178,7 +292,7 @@ void ui_roll(void)
         else if (summary_type == 2) {
             lcd_write_text(" BEST: ");
             lcd_write_number(best, 4, 0);
-        } 
+        }
         else if (summary_type == 3) {
             lcd_write_text("WORST: ");
             lcd_write_number(worst, 4, 0);

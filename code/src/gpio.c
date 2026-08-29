@@ -1,3 +1,23 @@
+/**
+ * @file gpio.c
+ * @addtogroup ttrpg9000_gpio
+ *
+ * Implementation of the general purpose I/O module, see gpio.h.
+ *
+ * The encoder and pushbutton lines are wired to the ATtiny4313 pin
+ * change interrupts:
+ *
+ * - The PCINT0 handler fires on any change of the four encoder phase
+ *   lines, debounces them, decodes the quadrature phases into
+ *   clockwise/counter clockwise steps and forwards the events to the
+ *   UI.
+ * - The PCINT1 handler fires on any change of the two pushbutton
+ *   lines, debounces them and reports down-presses to the UI.
+ *
+ * Both handlers also feed entropy into the random number generator,
+ * since the timing of user interaction is hard to predict.
+ */
+
 #include "config.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -39,8 +59,44 @@ bool gpio_pbr() {
     return !READ_PIN(PBR);
 }
 
-// Function to detect if the encoder is spinning CW or CCW and to keep 
-// accurate state
+/**
+ * @ingroup ttrpg9000_gpio
+ * @brief Latched state of the two phase signals of a rotary encoder.
+ */
+typedef struct {
+    /** Last sampled level of phase A (1 = high, 0 = low). */
+    uint8_t a;
+    /** Last sampled level of phase B (1 = high, 0 = low). */
+    uint8_t b;
+} EncoderState;
+
+/**
+ * @ingroup ttrpg9000_gpio
+ * @brief Result of comparing the current and the previous encoder phases.
+ */
+typedef enum {
+    /** The encoder stepped counter clockwise. */
+    CCW_SPIN = -1,
+    /** The encoder did not move. */
+    NO_SPIN = 0,
+    /** The encoder stepped clockwise. */
+    CW_SPIN = 1,
+} EncoderSpin;
+
+/**
+ * @ingroup ttrpg9000_gpio
+ * @brief Detect the rotation of a rotary encoder step.
+ *
+ * Compares the current levels of the two phase signals with the
+ * latched state and detects a clockwise or counter clockwise step from
+ * the falling edge transitions of the quadrature signal. The latched
+ * state is updated before returning.
+ *
+ * @param state Latched state of the encoder, updated in place.
+ * @param a     Current level of phase A.
+ * @param b     Current level of phase B.
+ * @return The detected rotation: CW_SPIN, CCW_SPIN or NO_SPIN.
+ */
 EncoderSpin encoder_state_update(EncoderState *state, uint8_t a, uint8_t b)
 {
     EncoderSpin spin = NO_SPIN;
@@ -57,9 +113,10 @@ EncoderSpin encoder_state_update(EncoderState *state, uint8_t a, uint8_t b)
     return spin;
 }
 
-// Encoder interrupt handling
+// Interrupt service routine for the rotary encoders (PCINT0)
 ISR (PCINT0_vect)
 {
+    // Latched phase state of the left and right encoders
     static EncoderState enl = {
         .a = 1,
         .b = 1,
@@ -74,7 +131,7 @@ ISR (PCINT0_vect)
 
     // Wait for signal to be stable
     _delay_ms(0.5);
-    
+
     // Calculate the encoder positions
     uint8_t la = READ_PIN(ENLA);
     uint8_t lb = READ_PIN(ENLB);
@@ -94,11 +151,10 @@ ISR (PCINT0_vect)
     }
 }
 
-// Pushbutton interrupt handling
-// Interrupt service routine
+// Interrupt service routine for the pushbuttons (PCINT1)
 ISR (PCINT1_vect)
 {
-    // Global state of the pushbuttons
+    // Latched state of the pushbuttons
     static uint8_t pbl = 1;
     static uint8_t pbr = 1;
 
@@ -112,13 +168,12 @@ ISR (PCINT1_vect)
     uint8_t pbl_update = READ_PIN(PBL);
     uint8_t pbr_update = READ_PIN(PBR);
 
-    // Down-press left button clears LEDs
+    // Down-press of the left button returns to the dice selection screen
     if (pbl && !pbl_update) {
         ui_manager(PBL_PRESS);
     }
 
-    // Down-press right calculates a random value between 0-7 to display on
-    // the LEDS in binary
+    // Down-press of the right button performs a roll
     if (pbr && !pbr_update) {
         ui_manager(PBR_PRESS);
     }

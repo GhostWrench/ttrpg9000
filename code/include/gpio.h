@@ -1,6 +1,12 @@
-/** General purpose I/O module
- * Includes port mapping to periferials connected to GPIO pins and functions 
- * for interacting with them.
+/**
+ * @file gpio.h
+ * @defgroup ttrpg9000_gpio General purpose I/O module
+ * @brief Rotary encoder and pushbutton input handling.
+ *
+ * Configures the GPIO pins used by the two rotary encoders and the two
+ * pushbuttons and handles their pin change interrupts. Encoder steps
+ * and button presses are reported to the user interface module, and
+ * every interrupt also feeds entropy into the random number generator.
  */
 
 #ifndef TTRPG9000_GPIO_H
@@ -9,33 +15,28 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// Global state of the left and right encoders
-typedef struct {
-    uint8_t a;
-    uint8_t b;
-} EncoderState;
-
-typedef enum {
-    CCW_SPIN = -1,
-    NO_SPIN = 0,
-    CW_SPIN = 1,
-} EncoderSpin;
-
 /**
- * Initialize the GPIO ports
+ * @ingroup ttrpg9000_gpio
+ * @brief Initialize the GPIO ports.
+ *
+ * Sets the encoder and pushbutton pins to input with internal pullup
+ * resistors and enables the pin change interrupts that detect encoder
+ * steps and button presses.
  */
 void gpio_init(void);
 
 /**
- * Get the state of the left pushbutton
- * 
+ * @ingroup ttrpg9000_gpio
+ * @brief Get the state of the left pushbutton.
+ *
  * @return true if pressed, false if not
  */
 bool gpio_pbl(void);
 
 /**
- * Get the state of the right pushbutton
- * 
+ * @ingroup ttrpg9000_gpio
+ * @brief Get the state of the right pushbutton.
+ *
  * @return true if pressed, false if not
  */
 bool gpio_pbr(void);
