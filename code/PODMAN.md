@@ -25,10 +25,6 @@ From this directory:
 The first run builds the container image automatically (takes a minute);
 subsequent runs reuse it.
 
-Artifacts are kept in a directory named after the target MCU and game mode
-(`build/attiny4313-standard/`, `build/attiny4313-shadowrun/`), so switching
-between the two builds never requires a `make clean` first.
-
 ## The helper script
 
 `container.sh` is a thin wrapper that mounts this directory into the image and
