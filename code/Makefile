@@ -12,13 +12,19 @@ SHADOWRUN ?= 0
 # Flags
 CFLAGS := -std=c99 -Wall -Wextra -Wpedantic -Os -mmcu=$(MCU) -I./include
 ifeq (${SHADOWRUN}, 1)
+VARIANT := shadowrun
 CFLAGS += -DDEFAULT_GAME_MODE=1
+else
+VARIANT := standard
 endif
 
 # Project directories
+# Artifacts are tagged with the MCU and game-mode variant so a SHADOWRUN= or
+# MCU= switch lands in a fresh directory and cannot reuse stale objects.
 SRCDIR := src
 INCDIR := include
-BUILDDIR := build
+BUILDROOT := build
+BUILDDIR := $(BUILDROOT)/$(MCU)-$(VARIANT)
 DOCS_DIR := docs
 
 # Find files
@@ -27,7 +33,7 @@ SRCS = $(wildcard $(SRCDIR)/*.c)
 HDRS = $(wildcard $(INCDIR)/*.h)
 OBJS = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRCS))
 
-.PHONY: clean read-fuses write-fuses flash docs
+.PHONY: all clean read-fuses write-fuses flash docs
 
 all: $(EXEC).hex
 
@@ -56,4 +62,4 @@ flash: $(EXEC).hex
 	avrdude -v -p $(MCU) -c $(ISP) -b 19200 -U flash:w:$(EXEC).hex:i
 
 clean:
-	rm -rf build/* $(DOCS_DIR)
+	rm -rf $(BUILDROOT) $(DOCS_DIR)

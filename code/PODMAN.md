@@ -12,10 +12,10 @@ This directory ships a `Containerfile` that packages the whole AVR toolchain (`a
 From this directory:
 
 ```bash
-# Standard firmware build -> build/ttrpg9000_v1.3.hex
+# Standard firmware build -> build/attiny4313-standard/ttrpg9000_v1.3.hex
 ./container.sh build
 
-# Shadowrun firmware build
+# Shadowrun firmware build -> build/attiny4313-shadowrun/ttrpg9000_v1.3.hex
 ./container.sh shadowrun
 
 # API documentation -> docs/html/index.html
@@ -24,6 +24,10 @@ From this directory:
 
 The first run builds the container image automatically (takes a minute);
 subsequent runs reuse it.
+
+Artifacts are kept in a directory named after the target MCU and game mode
+(`build/attiny4313-standard/`, `build/attiny4313-shadowrun/`), so switching
+between the two builds never requires a `make clean` first.
 
 ## The helper script
 
@@ -38,6 +42,7 @@ runs the matching `make` target. Available commands:
 | `clean`               | `make clean` — remove build/docs artifacts        |
 | `shell`               | interactive shell inside the container            |
 | `flash`               | `make flash` — write firmware via AVR programmer  |
+| `shadowrun-flash`     | `SHADOWRUN=1 make flash` — flash Shadowrun build  |
 | `read-fuses`          | `make read-fuses`                                 |
 | `write-fuses`         | `make write-fuses`                                |
 | `build-image`         | (re)build the container image                     |

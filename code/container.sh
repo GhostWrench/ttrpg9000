@@ -27,6 +27,7 @@ Commands:
   clean              Remove build artifacts (make clean)
   shell              Open a shell inside the container
   flash              Flash the chip with an attached AVR programmer
+  shadowrun-flash    Flash the chip with the Shadowrun firmware
   read-fuses         Read the low fuse bits
   write-fuses        Write the fuse bits
 
@@ -72,6 +73,12 @@ case "$cmd" in
         # direct device access. --privileged is the simplest way to grant it
         # from a rootless container; see PODMAN.md for safer alternatives.
         podman run --rm -it --privileged -v "$HERE:/src:Z" "$IMAGE" make "$cmd" "$@"
+        ;;
+    shadowrun-flash)
+        ensure_image
+        # SHADOWRUN=1 points make at the shadowrun build directory so the
+        # firmware flashed matches the one just built.
+        podman run --rm -it --privileged -e SHADOWRUN=1 -v "$HERE:/src:Z" "$IMAGE" make flash "$@"
         ;;
     *)
         echo "Unknown command: $cmd" >&2
