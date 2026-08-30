@@ -1,0 +1,30 @@
+# Build environment for the TTRPG-9000 ATtiny4313 firmware.
+#
+# This image only carries the toolchain (avr-gcc, avrdude, doxygen); the
+# source tree is expected to be bind-mounted at /src at run time, so the
+# image never needs to be rebuilt when the firmware changes.
+#
+#   podman build -t ttrpg9000-builder -f Containerfile .
+#   podman run --rm -v "$PWD:/src:Z" ttrpg9000-builder
+#
+# See PODMAN.md for the full set of commands.
+
+FROM docker.io/library/debian:bookworm-slim
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        make \
+        gcc-avr \
+        binutils-avr \
+        avr-libc \
+        avrdude \
+        doxygen \
+        usbutils \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /src
+
+# A plain `podman run <image>` performs the standard firmware build.
+CMD ["make"]

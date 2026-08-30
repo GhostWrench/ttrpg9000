@@ -9,6 +9,8 @@ The TTRPG-9000 is an open-hardware and open-source handheld electronic dicerolli
 
 To build and install, you will need a Linux computer with gcc-avr, binutils-avr avr-libc and avrdude installed. (I'm sure you can do it on Windows too, but you are on your own)
 
+Prefer not to install the toolchain? You can build the whole thing in a Podman container instead — see [code/PODMAN.md](code/PODMAN.md).
+
 ### Build (Standard)
 
 ```bash
