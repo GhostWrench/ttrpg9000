@@ -119,7 +119,7 @@ void lcd_init(void)
     lcd_send_cmd(1, 0x00);
     // function set RE=0, IS=0
     lcd_send_cmd(0, 0x38);
-    // Display on
+    // Display on, cursor off
     lcd_send_cmd(0, 0x0c);
     // Clear the screen and return to home
     lcd_clear();
@@ -146,7 +146,7 @@ void lcd_write_number(uint16_t number, int8_t pad, int8_t just)
     {
         for (int8_t ii=(pad-1); ii>=0; ii--)
         {
-            lcd_send_cmd(1, 0x23);
+            lcd_send_cmd(1, LCD_CHAR_HASH);
         }
     }
     else
@@ -156,7 +156,7 @@ void lcd_write_number(uint16_t number, int8_t pad, int8_t just)
         {
             for (int8_t ii=pad; ii>width; ii--)
             {
-                lcd_send_cmd(1, 0x20);
+                lcd_send_cmd(1, LCD_CHAR_SPACE);
             }
         }
         for (int8_t ii=(width-1); ii>=0; ii--)
@@ -168,7 +168,7 @@ void lcd_write_number(uint16_t number, int8_t pad, int8_t just)
         {
             for (int8_t ii=pad; ii>width; ii--)
             {
-                lcd_send_cmd(1, 0x20);
+                lcd_send_cmd(1, LCD_CHAR_SPACE);
             }
         }
     }

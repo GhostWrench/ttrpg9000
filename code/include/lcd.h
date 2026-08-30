@@ -30,9 +30,11 @@
  * @brief LCD Special characters for "ROM A" map described in data sheet
  */
 #define LCD_CHAR_SPACE 0x20
-#define LCD_CHAR_VERTICAL_BAR 0xfe
+#define LCD_CHAR_HASH 0x23
+#define LCD_CHAR_SQUARE 0xd0
 #define LCD_CHAR_UP_ARROW 0xde
 #define LCD_CHAR_DOWN_ARROW 0xe0
+#define LCD_CHAR_VERTICAL_BAR 0xfe
 
 /**
  * @ingroup ttrpg9000_lcd

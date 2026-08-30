@@ -188,7 +188,7 @@ void do_roll(void)
     // Light and graphics show
     for (uint8_t ii=0; ii<20; ii++)
     {
-        lcd_send_cmd(1, 0xd0);
+        lcd_send_cmd(1, LCD_CHAR_SQUARE);
         _delay_ms(100.0);
     }
     CLR_PIN(GLED);
