@@ -11,6 +11,8 @@
 #ifndef TTRPG9000_UI_H
 #define TTRPG9000_UI_H
 
+#include <stdbool.h>
+
 /**
  * @ingroup ttrpg9000_ui
  * @brief User input events reported to the UI.
@@ -49,5 +51,45 @@ void ui_home(void);
  * @param input The input event to process.
  */
 void ui_manager(UIInput input);
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Queue an input event for processing in the main loop.
+ *
+ * Called from the GPIO interrupt handlers instead of ui_manager() so
+ * that the user interface and roll rendering run in main context
+ * instead of on top of the interrupt stack frame. The queue is a small
+ * ring buffer; events are dropped if it is full.
+ *
+ * @param input The input event to enqueue.
+ */
+void ui_post_event(UIInput input);
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Check whether an input event is waiting.
+ *
+ * @return true if at least one event is queued.
+ */
+bool ui_have_event(void);
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Pop the oldest queued input event.
+ *
+ * Only call when ui_have_event() is true.
+ *
+ * @return The next queued UIInput.
+ */
+UIInput ui_get_event(void);
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Discard all queued input events.
+ *
+ * Used before a blocking operation (a roll) so that input accumulated
+ * while the screen was busy is not replayed afterwards.
+ */
+void ui_clear_events(void);
 
 #endif // TTRPG9000_UI_H

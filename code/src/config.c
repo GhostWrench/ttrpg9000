@@ -13,8 +13,11 @@
 /**
  * @ingroup ttrpg9000_config
  * @brief Active game mode of the device.
+ *
+ * Stored as a byte (rather than the enum's default int width) to keep
+ * the small RAM footprint on the target.
  */
-static GameMode game_mode = DEFAULT_GAME_MODE;
+static uint8_t game_mode = DEFAULT_GAME_MODE;
 
 void config_init() {
     // If a pushbutton is held down at boot, revert to the standard mode

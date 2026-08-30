@@ -1,12 +1,12 @@
 /**
  * @file rand.h
  * @defgroup ttrpg9000_rand Random number generator
- * @brief 64 bit pseudo random number generator with hardware entropy.
+ * @brief 32 bit pseudo random number generator with hardware entropy.
  *
- * Uses the Ranq1 generator (see page 351 of "Numerical Recipes, Third
- * Edition", Press et al.) as a fast 64 bit PRNG. Timer 0 runs free at
- * the full clock speed and acts as a source of entropy that is mixed
- * into the generator state.
+ * Uses a 32 bit xorshift generator, which is cheap on an 8 bit AVR
+ * (no 64 bit arithmetic and no multiply or divide library calls).
+ * Timer 0 runs free at the full clock speed and acts as a source of
+ * entropy that is mixed into the generator state.
  */
 
 #ifndef TTRPG9000_RAND_H
@@ -27,9 +27,9 @@ void rand_init(void);
  * @ingroup ttrpg9000_rand
  * @brief Generate the next random number.
  *
- * @return A pseudo random 64 bit value.
+ * @return A pseudo random 32 bit value.
  */
-uint64_t rand_generate(void);
+uint32_t rand_generate(void);
 
 /**
  * @ingroup ttrpg9000_rand

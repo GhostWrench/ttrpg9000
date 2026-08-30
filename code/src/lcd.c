@@ -7,12 +7,13 @@
 
 #include "config.h"
 #include <avr/interrupt.h>
+#include <avr/pgmspace.h>
 #include <util/delay.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "lcd.h"
 #include "util.h"
+#include "stackguard.h"
 
 /**
  * @ingroup ttrpg9000_lcd
@@ -30,6 +31,8 @@
  */
 void spi_put_byte(uint8_t byte, uint8_t *resp)
 {
+    // Deepest point of every main context LCD write chain
+    STACK_GUARD_CHECK();
     // Wait for transmit buffer to be available
     while (!(GET_BIT(UCSRA, UDRE)));
     // Put data in the buffer and send
@@ -127,17 +130,30 @@ void lcd_init(void)
 
 void lcd_write_number(uint16_t number, int8_t pad, int8_t just)
 {
-    // Do the division
+    // Extract the decimal digits by repeated subtraction. This avoids a
+    // call into the divide library (div/__divmodhi4) which has a large
+    // stack frame; the values shown on the display are small so the
+    // subtraction loop is cheap. The place values live in program memory.
+    static const uint16_t place[5] PROGMEM = {10000, 1000, 100, 10, 1};
+    uint8_t digits[5];
     int8_t width = 0;
-    char buffer[5];
-    int16_t denom = 10;
-    for (int8_t ii=0; ii<5; ii++)
+    int8_t started = 0;
+    for (int8_t p = 0; p < 5; p++)
     {
-        div_t result = div(number, denom);
-        buffer[ii] = result.rem;
-        number = result.quot;
-        width++;
-        if (number == 0) break;
+        uint16_t step = pgm_read_word(&place[p]);
+        uint8_t d = 0;
+        while (number >= step)
+        {
+            number -= step;
+            d++;
+        }
+        // Emit the digit once a non zero digit has been seen, or for the
+        // units place so that zero still prints a single digit.
+        if (d || started || p == 4)
+        {
+            digits[width++] = d;
+            started = 1;
+        }
     }
 
     // Write the value to the screen
@@ -159,9 +175,9 @@ void lcd_write_number(uint16_t number, int8_t pad, int8_t just)
                 lcd_send_cmd(1, LCD_CHAR_SPACE);
             }
         }
-        for (int8_t ii=(width-1); ii>=0; ii--)
+        for (int8_t ii=0; ii<width; ii++)
         {
-            lcd_send_cmd(1, HEX_CHAR(buffer[ii]));
+            lcd_send_cmd(1, HEX_CHAR(digits[ii]));
         }
         if (just <= 0)
         // Left justify, write pad last

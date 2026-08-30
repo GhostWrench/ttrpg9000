@@ -46,6 +46,7 @@
 
 #include "config.h"
 
+#include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <util/delay.h>
 
@@ -54,6 +55,7 @@
 #include "util.h"
 #include "rand.h"
 #include "ui.h"
+#include "stackguard.h"
 
 /**
  * Application entry point.
@@ -77,12 +79,31 @@ int main(void)
     // Show the home screen
     ui_home();
 
-    // Sleep the CPU until an interrupt (encoder or button) wakes it
-    // Idle mode keeps the timer and peripherals running so entropy
-    // collection and delays keep working while the CPU is asleep
+    // Process queued input events. The GPIO interrupt handlers only
+    // enqueue events and add entropy, the UI and roll rendering run
+    // here in main context so the heavy work does not stack on top of
+    // the interrupt frame. The CPU sleeps between events; idle mode
+    // keeps the timer and peripherals running so entropy collection
+    // keeps working while asleep. The pending check is done with
+    // interrupts disabled so an event arriving just before sleeping
+    // wakes the CPU and is not missed.
     set_sleep_mode(SLEEP_MODE_IDLE);
+    STACK_GUARD_INIT();
     while (1)
     {
-        sleep_mode();
+        STACK_GUARD_CHECK();
+        if (ui_have_event())
+        {
+            UIInput input = ui_get_event();
+            ui_manager(input);
+        }
+        else
+        {
+            // Sleep with interrupts ENABLED (never around cli()) so a pin
+            // change wakes the core and vectors the handler that queues the
+            // next event; sleeping with the global I-bit clear would keep
+            // the core asleep and ignore all input.
+            sleep_mode();
+        }
     }
 }

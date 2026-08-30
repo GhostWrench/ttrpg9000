@@ -6,6 +6,8 @@
  */
 
 #include "config.h"
+#include <avr/interrupt.h>
+#include <avr/pgmspace.h>
 #include <util/delay.h>
 
 #include "ui.h"
@@ -21,14 +23,22 @@
  * @ingroup ttrpg9000_ui
  * @brief The screens the UI can currently display.
  */
-static enum {
+enum {
     /** Title screen shown at boot. */
     HOME_SCREEN,
     /** Screen for selecting the number of dice and the dice type. */
     DICE_SCREEN,
     /** Screen showing the result of a roll. */
     ROLL_SCREEN,
-} screen = HOME_SCREEN;
+};
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Currently displayed screen (one of the values above).
+ *
+ * Kept as a byte to save RAM compared with an int width enum.
+ */
+static uint8_t screen = HOME_SCREEN;
 
 /**
  * @ingroup ttrpg9000_ui
@@ -49,7 +59,7 @@ static enum {
  * Indexed by the dice type selector. Index 0 is unused so the selector
  * starts at 1.
  */
-static const uint8_t side_count[MAX_DICE_TYPES] = {
+static const PROGMEM uint8_t side_count[MAX_DICE_TYPES] = {
     0, 6, 8, 10, 12, 20, 100, 2, 4
 };
 
@@ -101,6 +111,50 @@ static uint8_t first_line = 0;
  * @brief Number of result lines needed for the last roll.
  */
 static uint8_t num_lines = 0;
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Size of the input event ring buffer (power of two).
+ */
+#define UI_EVENT_QUEUE_SIZE 8
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Ring buffer of pending input events.
+ *
+ * Single producer (the GPIO interrupt handlers write head) and single
+ * consumer (the main loop writes tail), so the byte indices are safe
+ * without further locking.
+ */
+static volatile uint8_t evt_buf[UI_EVENT_QUEUE_SIZE];
+static volatile uint8_t evt_head;
+static volatile uint8_t evt_tail;
+
+void ui_post_event(UIInput input)
+{
+    uint8_t head = evt_head;
+    uint8_t next = (uint8_t)((head + 1) & (UI_EVENT_QUEUE_SIZE - 1));
+    if (next == evt_tail) return; // Queue full, drop the event
+    evt_buf[head] = (uint8_t)input;
+    evt_head = next;
+}
+
+bool ui_have_event(void)
+{
+    return evt_head != evt_tail;
+}
+
+UIInput ui_get_event(void)
+{
+    UIInput input = (UIInput)evt_buf[evt_tail];
+    evt_tail = (uint8_t)((evt_tail + 1) & (UI_EVENT_QUEUE_SIZE - 1));
+    return input;
+}
+
+void ui_clear_events(void)
+{
+    evt_tail = evt_head;
+}
 
 /**
  * @ingroup ttrpg9000_ui
@@ -160,6 +214,11 @@ void ui_home(void)
  */
 void ui_dice(void)
 {
+    // Render with interrupts disabled so the deep LCD write chain is not
+    // interrupted and stacked under an interrupt frame; this keeps the
+    // peak stack the larger of the main and interrupt depths rather than
+    // their sum. The render takes only a few milliseconds.
+    cli();
     screen = DICE_SCREEN;
     lcd_clear();
     lcd_goto(1, 4);
@@ -167,7 +226,8 @@ void ui_dice(void)
     lcd_goto(2, 6);
     lcd_write_number(num_dice, 3, 1);
     lcd_send_cmd(1, 'd');
-    lcd_write_number(side_count[side_select], 3, 0);
+    lcd_write_number(pgm_read_byte(&side_count[side_select]), 3, 0);
+    sei();
 }
 
 /**
@@ -195,11 +255,16 @@ void do_roll(void)
     lcd_clear();
 
     // Generate the numbers
+    uint8_t sides = pgm_read_byte(&side_count[side_select]);
     for (uint8_t ii=0; ii<num_dice; ii++)
     {
-        uint64_t roll = (rand_generate() % side_count[side_select]) + 1;
-        rolls[ii] = (uint8_t)roll;
+        // Multiply and take the high bits (no divide): maps a random
+        // value to 0..sides-1 then shifts up to the 1..sides range
+        uint32_t r = rand_generate();
+        rolls[ii] = (uint8_t)(((uint32_t)(r >> 16) * sides) >> 16) + 1;
     }
+    // Discard any input that arrived while the roll animation blocked
+    ui_clear_events();
     lcd_clear();
 }
 
@@ -215,6 +280,11 @@ void do_roll(void)
  */
 void ui_roll(void)
 {
+    // Render with interrupts disabled so the deep LCD write chain is not
+    // interrupted and stacked under an interrupt frame; this keeps the
+    // peak stack the larger of the main and interrupt depths rather than
+    // their sum (see the note in ui_dice).
+    cli();
     screen = ROLL_SCREEN;
     lcd_clear();
     uint16_t total = 0;
@@ -280,7 +350,7 @@ void ui_roll(void)
     lcd_send_cmd(1, '(');
     lcd_write_number(num_dice, 2, 1);
     lcd_send_cmd(1, 'd');
-    lcd_write_number(side_count[side_select], 3, 0);
+    lcd_write_number(pgm_read_byte(&side_count[side_select]), 3, 0);
     lcd_send_cmd(1, ')');
     if (num_dice > 1)
     {
@@ -304,6 +374,7 @@ void ui_roll(void)
             lcd_write_text(glitch > (num_dice >> 1) ? "Y" : "N");
         }
     }
+    sei();
 }
 
 void ui_manager(UIInput input)

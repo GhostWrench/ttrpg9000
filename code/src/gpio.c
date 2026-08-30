@@ -27,6 +27,7 @@
 #include "util.h"
 #include "rand.h"
 #include "ui.h"
+#include "stackguard.h"
 
 void gpio_init(void)
 {
@@ -116,6 +117,7 @@ EncoderSpin encoder_state_update(EncoderState *state, uint8_t a, uint8_t b)
 // Interrupt service routine for the rotary encoders (PCINT0)
 ISR (PCINT0_vect)
 {
+    STACK_GUARD_CHECK();
     // Latched phase state of the left and right encoders
     static EncoderState enl = {
         .a = 1,
@@ -141,19 +143,20 @@ ISR (PCINT0_vect)
     EncoderSpin rspin = encoder_state_update(&enr, ra, rb);
 
     if (lspin == CCW_SPIN) {
-        ui_manager(ENL_CCW);
+        ui_post_event(ENL_CCW);
     } else if (lspin == CW_SPIN) {
-        ui_manager(ENL_CW);
+        ui_post_event(ENL_CW);
     } else if (rspin == CCW_SPIN) {
-        ui_manager(ENR_CCW);
+        ui_post_event(ENR_CCW);
     } else if (rspin == CW_SPIN) {
-        ui_manager(ENR_CW);
+        ui_post_event(ENR_CW);
     }
 }
 
 // Interrupt service routine for the pushbuttons (PCINT1)
 ISR (PCINT1_vect)
 {
+    STACK_GUARD_CHECK();
     // Latched state of the pushbuttons
     static uint8_t pbl = 1;
     static uint8_t pbr = 1;
@@ -170,12 +173,12 @@ ISR (PCINT1_vect)
 
     // Down-press of the left button returns to the dice selection screen
     if (pbl && !pbl_update) {
-        ui_manager(PBL_PRESS);
+        ui_post_event(PBL_PRESS);
     }
 
     // Down-press of the right button performs a roll
     if (pbr && !pbr_update) {
-        ui_manager(PBR_PRESS);
+        ui_post_event(PBR_PRESS);
     }
 
     // Update states
