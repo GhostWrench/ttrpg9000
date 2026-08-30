@@ -19,11 +19,20 @@
  */
 #define LCD_NUM_COLUMNS 20
 
-/** 
- * @brief Number of character rows on the LCD screen.
+/**
  * @ingroup ttrpg9000_lcd
+ * @brief Number of character rows on the LCD screen.
  */
 #define LCD_NUM_ROWS 4
+
+/**
+ * @ingroup ttrpg9000_lcd
+ * @brief LCD Special characters for "ROM A" map described in data sheet
+ */
+#define LCD_CHAR_SPACE 0x20
+#define LCD_CHAR_VERTICAL_BAR 0xfe
+#define LCD_CHAR_UP_ARROW 0xde
+#define LCD_CHAR_DOWN_ARROW 0xe0
 
 /**
  * @ingroup ttrpg9000_lcd

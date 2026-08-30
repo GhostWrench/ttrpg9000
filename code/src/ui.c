@@ -245,29 +245,29 @@ void ui_roll(void)
             if (ii == first_item) {
                 if (first_line == 0) {
                     lcd_write_number(1, 2, 0);
-                    lcd_send_cmd(1, 0xfe);
-                    lcd_send_cmd(1, 0x20);
+                    lcd_send_cmd(1, LCD_CHAR_VERTICAL_BAR);
+                    lcd_send_cmd(1, LCD_CHAR_SPACE);
                 } else {
                     lcd_write_number(first_line+1, 2, 0);
-                    lcd_send_cmd(1, 0xde);
-                    lcd_send_cmd(1, 0x20);
+                    lcd_send_cmd(1, LCD_CHAR_UP_ARROW);
+                    lcd_send_cmd(1, LCD_CHAR_SPACE);
                 }
             } else if (ii == (first_item + 4)) {
-                lcd_send_cmd(1, 0x20);
-                lcd_send_cmd(1, 0x20);
-                lcd_send_cmd(1, 0xfe);
-                lcd_send_cmd(1, 0x20);
+                lcd_send_cmd(1, LCD_CHAR_SPACE);
+                lcd_send_cmd(1, LCD_CHAR_SPACE);
+                lcd_send_cmd(1, LCD_CHAR_VERTICAL_BAR);
+                lcd_send_cmd(1, LCD_CHAR_SPACE);
             } else if (ii == (first_item + 8)) {
                 if ((first_line+3) == num_lines) {
-                    lcd_send_cmd(1, 0x20);
-                    lcd_send_cmd(1, 0x20);
-                    lcd_send_cmd(1, 0xfe);
-                    lcd_send_cmd(1, 0x20);
+                    lcd_send_cmd(1, LCD_CHAR_SPACE);
+                    lcd_send_cmd(1, LCD_CHAR_SPACE);
+                    lcd_send_cmd(1, LCD_CHAR_VERTICAL_BAR);
+                    lcd_send_cmd(1, LCD_CHAR_SPACE);
                 } else {
-                    lcd_send_cmd(1, 0x20);
-                    lcd_send_cmd(1, 0x20);
-                    lcd_send_cmd(1, 0xe0);
-                    lcd_send_cmd(1, 0x20);
+                    lcd_send_cmd(1, LCD_CHAR_SPACE);
+                    lcd_send_cmd(1, LCD_CHAR_SPACE);
+                    lcd_send_cmd(1, LCD_CHAR_DOWN_ARROW);
+                    lcd_send_cmd(1, LCD_CHAR_SPACE);
                 }
             }
             if (ii >= first_item && ii < (first_item + 12))
