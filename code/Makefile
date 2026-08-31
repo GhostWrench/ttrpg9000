@@ -51,7 +51,7 @@ SRCS = $(wildcard $(SRCDIR)/*.c)
 HDRS = $(wildcard $(INCDIR)/*.h)
 OBJS = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRCS))
 
-.PHONY: all clean read-fuses write-fuses flash docs size stack-check
+.PHONY: all clean read-fuses write-fuses flash docs size stack-check test
 
 all: $(EXEC).hex
 
@@ -81,6 +81,12 @@ stack-check:
 	avrdude -q -q -p $(MCU) -c $(ISP) -b 19200 -U eeprom:r:-:r > /tmp/ttrpg_stack.bin
 	@od -An -tu1 -N2 /tmp/ttrpg_stack.bin | awk '{ m=($$1>=255)?" (OVERFLOW!)":""; printf "peak stack used = %d bytes%s (of %s bytes RAM)\n", $$1, m, 256 }'
 
+# Build and run the host unit tests for the pure math helpers (tests/) with
+# the system compiler. Independent of the AVR firmware build; run this on the
+# host or in the container (which installs native gcc via build-essential).
+test:
+	$(MAKE) -C tests run
+
 read-fuses:
 	avrdude -v -p $(MCU) -c $(ISP) -b 19200 -U lfuse:r:-:h
 
@@ -94,3 +100,4 @@ flash: $(EXEC).hex
 
 clean:
 	rm -rf $(BUILDROOT) $(DOCS_DIR)
+	$(MAKE) -C tests clean

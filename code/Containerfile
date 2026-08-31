@@ -1,11 +1,14 @@
 # Build environment for the TTRPG-9000 ATtiny4313 firmware.
 #
-# This image only carries the toolchain (avr-gcc, avrdude, doxygen); the
-# source tree is expected to be bind-mounted at /src at run time, so the
-# image never needs to be rebuilt when the firmware changes.
+# This image carries the toolchain (avr-gcc, avrdude, doxygen) plus a native
+# gcc (build-essential) so the host unit tests under tests/ run in the same
+# reproducible image as the firmware build; the source tree is expected to be
+# bind-mounted at /src at run time, so the image never needs to be rebuilt
+# when the firmware changes.
 #
 #   podman build -t ttrpg9000-builder -f Containerfile .
-#   podman run --rm -v "$PWD:/src:Z" ttrpg9000-builder
+#   podman run --rm -v "$PWD:/src:Z" ttrpg9000-builder            # make
+#   podman run --rm -v "$PWD:/src:Z" ttrpg9000-builder make test  # unit tests
 #
 # See PODMAN.md for the full set of commands.
 
@@ -15,6 +18,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        build-essential \
         make \
         gcc-avr \
         binutils-avr \

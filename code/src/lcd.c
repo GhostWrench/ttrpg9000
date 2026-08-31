@@ -7,11 +7,11 @@
 
 #include "config.h"
 #include <avr/interrupt.h>
-#include <avr/pgmspace.h>
 #include <util/delay.h>
 #include <string.h>
 
 #include "lcd.h"
+#include "mathutil.h"
 #include "util.h"
 #include "stackguard.h"
 
@@ -130,31 +130,11 @@ void lcd_init(void)
 
 void lcd_write_number(uint16_t number, int8_t pad, int8_t just)
 {
-    // Extract the decimal digits by repeated subtraction. This avoids a
-    // call into the divide library (div/__divmodhi4) which has a large
-    // stack frame; the values shown on the display are small so the
-    // subtraction loop is cheap. The place values live in program memory.
-    static const uint16_t place[5] PROGMEM = {10000, 1000, 100, 10, 1};
-    uint8_t digits[5];
-    int8_t width = 0;
-    int8_t started = 0;
-    for (int8_t p = 0; p < 5; p++)
-    {
-        uint16_t step = pgm_read_word(&place[p]);
-        uint8_t d = 0;
-        while (number >= step)
-        {
-            number -= step;
-            d++;
-        }
-        // Emit the digit once a non zero digit has been seen, or for the
-        // units place so that zero still prints a single digit.
-        if (d || started || p == 4)
-        {
-            digits[width++] = d;
-            started = 1;
-        }
-    }
+    // Split the value into its decimal digits. num_digits extracts them by
+    // repeated subtraction, which avoids a call into the divide library
+    // (div/__divmodhi4) that has a large stack frame.
+    uint8_t digits[MU_MAX_DIGITS];
+    int8_t width = (int8_t)num_digits(number, digits);
 
     // Write the value to the screen
     if (width > pad)

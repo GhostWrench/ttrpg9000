@@ -12,6 +12,7 @@
 
 #include "ui.h"
 #include "lcd.h"
+#include "mathutil.h"
 #include "rand.h"
 #include "util.h"
 
@@ -258,10 +259,8 @@ void do_roll(void)
     uint8_t sides = pgm_read_byte(&side_count[side_select]);
     for (uint8_t ii=0; ii<num_dice; ii++)
     {
-        // Multiply and take the high bits (no divide): maps a random
-        // value to 0..sides-1 then shifts up to the 1..sides range
-        uint32_t r = rand_generate();
-        rolls[ii] = (uint8_t)(((uint32_t)(r >> 16) * sides) >> 16) + 1;
+        // Map a random value onto a die face in the 1..sides range
+        rolls[ii] = dice_range(rand_generate(), sides);
     }
     // Discard any input that arrived while the roll animation blocked
     ui_clear_events();
