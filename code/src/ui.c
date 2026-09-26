@@ -197,8 +197,7 @@ void do_roll(void)
     // Generate the numbers
     for (uint8_t ii=0; ii<num_dice; ii++)
     {
-        uint64_t roll = (rand_generate() % side_count[side_select]) + 1;
-        rolls[ii] = (uint8_t)roll;
+        rolls[ii] = rand_range(side_count[side_select]);
     }
     lcd_clear();
 }
