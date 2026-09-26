@@ -21,6 +21,9 @@ $(BUILDDIR):
 build/rand: rand.c ../src/rand.c $(HDRS) $(BUILDDIR)
 	$(CC) $(CFLAGS) rand.c ../src/rand.c -o $@
 
+build/queue: queue.c ../src/queue.c $(HDRS) $(BUILDDIR)
+	$(CC) $(CFLAGS) queue.c ../src/queue.c -o $@
+
 run: all
 	@status=0; \
 	for t in $(TESTS); do \

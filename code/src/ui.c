@@ -8,6 +8,7 @@
 #include "config.h"
 #include <avr/pgmspace.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
 
 #include "ui.h"
 #include "lcd.h"
@@ -121,7 +122,7 @@ static const PROGMEM char roll_phrases_standard[UI_NUM_PHRASES][UI_MAX_PHRASE_LE
     "WILD DICE SURGE!",
     "CASTING MATH ROCKS",
     "TEMPTING DICE GODS",
-    "YOU SURE?",
+    "ARE YOU SURE?",
     "DIVINING FATE",
     "HOPE THIS WORKS!",
     "CHECKING LUCK RUNES",
@@ -137,11 +138,11 @@ static const PROGMEM char roll_phrases_shadowrun[UI_NUM_PHRASES][UI_MAX_PHRASE_L
     "RUNNING SIMULATION",
     "QUERYING THE NET",
     "COUNTING HITS",
-    "YOU SURE?",
-    "CALIBRATING CPU",
+    "WE DOING THIS?",
+    "OVERCLOCKING CPU",
     "HOPE THIS WORKS!",
     "COMPUTING D6 POOL",
-    "ANALYZING SENSORS",
+    "READING SENSORS",
     "DETECTING GLITCHES",
     "CRUNCHING DATA",
 };
@@ -224,6 +225,8 @@ void ui_dice(void)
  */
 void do_roll(void)
 {
+    // Handle the roll without interruption from the input ISRs
+    cli();
     first_line = 0;
     lcd_clear();
     lcd_goto(2,0);
@@ -259,6 +262,7 @@ void do_roll(void)
         rolls[ii] = rand_range(pgm_read_byte(&side_count[side_select]));
     }
     lcd_clear();
+    sei();
 }
 
 /**
