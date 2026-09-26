@@ -191,7 +191,6 @@ void do_roll(void)
         lcd_send_cmd(1, LCD_CHAR_SQUARE);
         _delay_ms(100.0);
     }
-    CLR_PIN(GLED);
     lcd_clear();
 
     // Generate the numbers
