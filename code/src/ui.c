@@ -35,7 +35,7 @@ static enum {
  * @ingroup ttrpg9000_ui
  * @brief Maximum number of dice that can be rolled at once.
  */
-#define MAX_DICE 80
+#define MAX_DICE 64
 
 /**
  * @ingroup ttrpg9000_ui
@@ -102,6 +102,49 @@ static uint8_t first_line = 0;
  * @brief Number of result lines needed for the last roll.
  */
 static uint8_t num_lines = 0;
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Constants for phrase selections
+ */
+#define UI_NUM_PHRASES 10
+#define UI_MAX_PHRASE_LENGTH 20
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Selection of phrases used for DnD Dice Rolls
+ */
+static const PROGMEM char roll_phrases_standard[UI_NUM_PHRASES][UI_MAX_PHRASE_LENGTH] = {
+  //"12345678901234567890"
+    "ROLLING DICE",
+    "CLICK-CLACK",
+    "WILD DICE SURGE!",
+    "CASTING MATH ROCKS",
+    "TEMPTING DICE GODS",
+    "YOU SURE?",
+    "DIVINING FATE",
+    "HOPE THIS WORKS!",
+    "CHECKING LUCK RUNES",
+    "DM LOOKS WORRIED...",
+};
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Selection of phrases used for Shadowrun rolls
+ */
+static const PROGMEM char roll_phrases_shadowrun[UI_NUM_PHRASES][UI_MAX_PHRASE_LENGTH] = {
+  //"01234567890123456789"
+    "RUNNING SIMULATION",
+    "QUERYING THE NET",
+    "COUNTING HITS",
+    "YOU SURE?",
+    "CALIBRATING CPU",
+    "HOPE THIS WORKS!",
+    "COMPUTING D6 POOL",
+    "ANALYZING SENSORS",
+    "DETECTING GLITCHES",
+    "CRUNCHING DATA",
+};
 
 /**
  * @ingroup ttrpg9000_ui
@@ -184,7 +227,23 @@ void do_roll(void)
     first_line = 0;
     lcd_clear();
     lcd_goto(2,0);
-    lcd_write_text("RUNNING SIMULATION");
+    uint8_t msg_idx = rand_range(10) - 1;
+    GameMode gm = config_game_mode();
+    for (uint8_t cidx=0; cidx<20; cidx++) {
+        uint8_t c = 0;
+        switch (gm) {
+        case GAME_MODE_STANDARD:
+            c = pgm_read_byte(&roll_phrases_standard[msg_idx][cidx]);
+            break;
+        case GAME_MODE_SHADOWRUN:
+            c = pgm_read_byte(&roll_phrases_shadowrun[msg_idx][cidx]);
+            break;
+        default:
+            break;
+        }
+        if (c == 0) break;
+        lcd_send_cmd(1, c);
+    }
     lcd_goto(3,0);
     // Light and graphics show
     for (uint8_t ii=0; ii<20; ii++)
