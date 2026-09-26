@@ -15,7 +15,7 @@
  * @ingroup ttrpg9000_ui
  * @brief User input events reported to the UI.
  */
-typedef enum {
+typedef enum __attribute__((packed)) {
     /** Left encoder rotated clockwise. */
     ENL_CW,
     /** Left encoder rotated counter clockwise. */

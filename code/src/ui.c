@@ -6,6 +6,7 @@
  */
 
 #include "config.h"
+#include <avr/pgmspace.h>
 #include <util/delay.h>
 
 #include "ui.h"
@@ -34,7 +35,7 @@ static enum {
  * @ingroup ttrpg9000_ui
  * @brief Maximum number of dice that can be rolled at once.
  */
-#define MAX_DICE 64
+#define MAX_DICE 80
 
 /**
  * @ingroup ttrpg9000_ui
@@ -49,7 +50,7 @@ static enum {
  * Indexed by the dice type selector. Index 0 is unused so the selector
  * starts at 1.
  */
-static const uint8_t side_count[MAX_DICE_TYPES] = {
+static const PROGMEM uint8_t side_count[MAX_DICE_TYPES] = {
     0, 6, 8, 10, 12, 20, 100, 2, 4
 };
 
@@ -167,7 +168,7 @@ void ui_dice(void)
     lcd_goto(2, 6);
     lcd_write_number(num_dice, 3, 1);
     lcd_send_cmd(1, 'd');
-    lcd_write_number(side_count[side_select], 3, 0);
+    lcd_write_number(pgm_read_byte(&side_count[side_select]), 3, 0);
 }
 
 /**
@@ -196,7 +197,7 @@ void do_roll(void)
     // Generate the numbers
     for (uint8_t ii=0; ii<num_dice; ii++)
     {
-        rolls[ii] = rand_range(side_count[side_select]);
+        rolls[ii] = rand_range(pgm_read_byte(&side_count[side_select]));
     }
     lcd_clear();
 }
@@ -278,7 +279,7 @@ void ui_roll(void)
     lcd_send_cmd(1, '(');
     lcd_write_number(num_dice, 2, 1);
     lcd_send_cmd(1, 'd');
-    lcd_write_number(side_count[side_select], 3, 0);
+    lcd_write_number(pgm_read_byte(&side_count[side_select]), 3, 0);
     lcd_send_cmd(1, ')');
     if (num_dice > 1)
     {

@@ -74,7 +74,7 @@ typedef struct {
  * @ingroup ttrpg9000_gpio
  * @brief Result of comparing the current and the previous encoder phases.
  */
-typedef enum {
+typedef enum __attribute__((packed)) {
     /** The encoder stepped counter clockwise. */
     CCW_SPIN = -1,
     /** The encoder did not move. */

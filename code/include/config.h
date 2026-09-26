@@ -30,7 +30,7 @@
  * @ingroup ttrpg9000_config
  * @brief Game modes supported by the device.
  */
-typedef enum {
+typedef enum __attribute__((packed)) {
     /** Standard mode, all dice types and total/best/worst summaries. */
     GAME_MODE_STANDARD,
     /** Shadowrun style mode with hit and glitch summaries. */
