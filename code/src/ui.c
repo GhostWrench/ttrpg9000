@@ -173,28 +173,6 @@ void mod_sub(uint8_t *num, uint8_t max)
     if (*num < 1) *num = max;
 }
 
-void ui_home(void)
-{
-    screen = HOME_SCREEN;
-    switch (config_game_mode()) {
-        case GAME_MODE_STANDARD:
-            dice_types = MAX_DICE_TYPES;
-            side_select = 5;
-            num_summary_types = 3;
-            break;
-        case GAME_MODE_SHADOWRUN:
-            dice_types = 2;
-            side_select = 1;
-            num_summary_types = 4;
-            break;
-    }
-    lcd_clear();
-    lcd_goto(1, 5);
-    lcd_write_text("TTRPG-9000");
-    lcd_goto(2, 3);
-    lcd_write_text("ARTIFICER DICE");
-}
-
 /**
  * @ingroup ttrpg9000_ui
  * @brief Show the dice selection screen.
@@ -366,6 +344,32 @@ void ui_roll(void)
             lcd_write_text(glitch > (num_dice >> 1) ? "Y" : "N");
         }
     }
+}
+
+// -----------------------------------------------------------------------------
+// PUBLIC FUNCTIONS
+// -----------------------------------------------------------------------------
+
+void ui_home(void)
+{
+    screen = HOME_SCREEN;
+    switch (config_game_mode()) {
+        case GAME_MODE_STANDARD:
+            dice_types = MAX_DICE_TYPES;
+            side_select = 5;
+            num_summary_types = 3;
+            break;
+        case GAME_MODE_SHADOWRUN:
+            dice_types = 2;
+            side_select = 1;
+            num_summary_types = 4;
+            break;
+    }
+    lcd_clear();
+    lcd_goto(1, 5);
+    lcd_write_text("TTRPG-9000");
+    lcd_goto(2, 3);
+    lcd_write_text("ARTIFICER DICE");
 }
 
 void ui_manager(UIInput input)
