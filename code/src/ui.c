@@ -6,7 +6,9 @@
  */
 
 #include "config.h"
+#include <avr/pgmspace.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
 
 #include "ui.h"
 #include "lcd.h"
@@ -49,7 +51,7 @@ static enum {
  * Indexed by the dice type selector. Index 0 is unused so the selector
  * starts at 1.
  */
-static const uint8_t side_count[MAX_DICE_TYPES] = {
+static const PROGMEM uint8_t side_count[MAX_DICE_TYPES] = {
     0, 6, 8, 10, 12, 20, 100, 2, 4
 };
 
@@ -104,6 +106,49 @@ static uint8_t num_lines = 0;
 
 /**
  * @ingroup ttrpg9000_ui
+ * @brief Constants for phrase selections
+ */
+#define UI_NUM_PHRASES 10
+#define UI_MAX_PHRASE_LENGTH 20
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Selection of phrases used for DnD Dice Rolls
+ */
+static const PROGMEM char roll_phrases_standard[UI_NUM_PHRASES][UI_MAX_PHRASE_LENGTH] = {
+  //"12345678901234567890"
+    "ROLLING DICE",
+    "CLICK-CLACK",
+    "WILD DICE SURGE!",
+    "CASTING MATH ROCKS",
+    "TEMPTING DICE GODS",
+    "ARE YOU SURE?",
+    "DIVINING FATE",
+    "HOPE THIS WORKS!",
+    "CHECKING LUCK RUNES",
+    "DM LOOKS WORRIED...",
+};
+
+/**
+ * @ingroup ttrpg9000_ui
+ * @brief Selection of phrases used for Shadowrun rolls
+ */
+static const PROGMEM char roll_phrases_shadowrun[UI_NUM_PHRASES][UI_MAX_PHRASE_LENGTH] = {
+  //"01234567890123456789"
+    "RUNNING SIMULATION",
+    "QUERYING THE NET",
+    "COUNTING HITS",
+    "WE DOING THIS?",
+    "OVERCLOCKING CPU",
+    "HOPE THIS WORKS!",
+    "COMPUTING D6 POOL",
+    "READING SENSORS",
+    "DETECTING GLITCHES",
+    "CRUNCHING DATA",
+};
+
+/**
+ * @ingroup ttrpg9000_ui
  * @brief Increment a value with wraparound.
  *
  * @param num Pointer to the value to increment.
@@ -128,28 +173,6 @@ void mod_sub(uint8_t *num, uint8_t max)
     if (*num < 1) *num = max;
 }
 
-void ui_home(void)
-{
-    screen = HOME_SCREEN;
-    switch (config_game_mode()) {
-        case GAME_MODE_STANDARD:
-            dice_types = MAX_DICE_TYPES;
-            side_select = 5;
-            num_summary_types = 3;
-            break;
-        case GAME_MODE_SHADOWRUN:
-            dice_types = 2;
-            side_select = 1;
-            num_summary_types = 4;
-            break;
-    }
-    lcd_clear();
-    lcd_goto(1, 5);
-    lcd_write_text("TTRPG-9000");
-    lcd_goto(2, 3);
-    lcd_write_text("ARTIFICER DICE");
-}
-
 /**
  * @ingroup ttrpg9000_ui
  * @brief Show the dice selection screen.
@@ -167,7 +190,7 @@ void ui_dice(void)
     lcd_goto(2, 6);
     lcd_write_number(num_dice, 3, 1);
     lcd_send_cmd(1, 'd');
-    lcd_write_number(side_count[side_select], 3, 0);
+    lcd_write_number(pgm_read_byte(&side_count[side_select]), 3, 0);
 }
 
 /**
@@ -180,10 +203,28 @@ void ui_dice(void)
  */
 void do_roll(void)
 {
+    // Handle the roll without interruption from the input ISRs
+    cli();
     first_line = 0;
     lcd_clear();
     lcd_goto(2,0);
-    lcd_write_text("RUNNING SIMULATION");
+    uint8_t msg_idx = rand_range(10) - 1;
+    GameMode gm = config_game_mode();
+    for (uint8_t cidx=0; cidx<20; cidx++) {
+        uint8_t c = 0;
+        switch (gm) {
+        case GAME_MODE_STANDARD:
+            c = pgm_read_byte(&roll_phrases_standard[msg_idx][cidx]);
+            break;
+        case GAME_MODE_SHADOWRUN:
+            c = pgm_read_byte(&roll_phrases_shadowrun[msg_idx][cidx]);
+            break;
+        default:
+            break;
+        }
+        if (c == 0) break;
+        lcd_send_cmd(1, c);
+    }
     lcd_goto(3,0);
     // Light and graphics show
     for (uint8_t ii=0; ii<20; ii++)
@@ -191,16 +232,15 @@ void do_roll(void)
         lcd_send_cmd(1, LCD_CHAR_SQUARE);
         _delay_ms(100.0);
     }
-    CLR_PIN(GLED);
     lcd_clear();
 
     // Generate the numbers
     for (uint8_t ii=0; ii<num_dice; ii++)
     {
-        uint64_t roll = (rand_generate() % side_count[side_select]) + 1;
-        rolls[ii] = (uint8_t)roll;
+        rolls[ii] = rand_range(pgm_read_byte(&side_count[side_select]));
     }
     lcd_clear();
+    sei();
 }
 
 /**
@@ -280,7 +320,7 @@ void ui_roll(void)
     lcd_send_cmd(1, '(');
     lcd_write_number(num_dice, 2, 1);
     lcd_send_cmd(1, 'd');
-    lcd_write_number(side_count[side_select], 3, 0);
+    lcd_write_number(pgm_read_byte(&side_count[side_select]), 3, 0);
     lcd_send_cmd(1, ')');
     if (num_dice > 1)
     {
@@ -304,6 +344,32 @@ void ui_roll(void)
             lcd_write_text(glitch > (num_dice >> 1) ? "Y" : "N");
         }
     }
+}
+
+// -----------------------------------------------------------------------------
+// PUBLIC FUNCTIONS
+// -----------------------------------------------------------------------------
+
+void ui_home(void)
+{
+    screen = HOME_SCREEN;
+    switch (config_game_mode()) {
+        case GAME_MODE_STANDARD:
+            dice_types = MAX_DICE_TYPES;
+            side_select = 5;
+            num_summary_types = 3;
+            break;
+        case GAME_MODE_SHADOWRUN:
+            dice_types = 2;
+            side_select = 1;
+            num_summary_types = 4;
+            break;
+    }
+    lcd_clear();
+    lcd_goto(1, 5);
+    lcd_write_text("TTRPG-9000");
+    lcd_goto(2, 3);
+    lcd_write_text("ARTIFICER DICE");
 }
 
 void ui_manager(UIInput input)

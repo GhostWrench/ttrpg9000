@@ -9,11 +9,13 @@
  *
  * - The PCINT0 handler fires on any change of the four encoder phase
  *   lines, debounces them, decodes the quadrature phases into
- *   clockwise/counter clockwise steps and forwards the events to the
+ *   clockwise/counter clockwise steps and queues the events for the
  *   UI.
  * - The PCINT1 handler fires on any change of the two pushbutton
- *   lines, debounces them and reports down-presses to the UI.
+ *   lines, debounces them and queues button down-presses for the UI.
  *
+ * Events are queued on a ring buffer (see the queue module) and consumed
+ * by the main loop, keeping the heavy UI work out of interrupt context.
  * Both handlers also feed entropy into the random number generator,
  * since the timing of user interaction is hard to predict.
  */
@@ -27,6 +29,7 @@
 #include "util.h"
 #include "rand.h"
 #include "ui.h"
+#include "queue.h"
 
 void gpio_init(void)
 {
@@ -74,7 +77,7 @@ typedef struct {
  * @ingroup ttrpg9000_gpio
  * @brief Result of comparing the current and the previous encoder phases.
  */
-typedef enum {
+typedef enum __attribute__((packed)) {
     /** The encoder stepped counter clockwise. */
     CCW_SPIN = -1,
     /** The encoder did not move. */
@@ -141,13 +144,13 @@ ISR (PCINT0_vect)
     EncoderSpin rspin = encoder_state_update(&enr, ra, rb);
 
     if (lspin == CCW_SPIN) {
-        ui_manager(ENL_CCW);
+        queue_push(ENL_CCW);
     } else if (lspin == CW_SPIN) {
-        ui_manager(ENL_CW);
+        queue_push(ENL_CW);
     } else if (rspin == CCW_SPIN) {
-        ui_manager(ENR_CCW);
+        queue_push(ENR_CCW);
     } else if (rspin == CW_SPIN) {
-        ui_manager(ENR_CW);
+        queue_push(ENR_CW);
     }
 }
 
@@ -170,12 +173,12 @@ ISR (PCINT1_vect)
 
     // Down-press of the left button returns to the dice selection screen
     if (pbl && !pbl_update) {
-        ui_manager(PBL_PRESS);
+        queue_push(PBL_PRESS);
     }
 
     // Down-press of the right button performs a roll
     if (pbr && !pbr_update) {
-        ui_manager(PBR_PRESS);
+        queue_push(PBR_PRESS);
     }
 
     // Update states

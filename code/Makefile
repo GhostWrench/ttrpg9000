@@ -10,6 +10,7 @@ ISP ?= usbasp
 SHADOWRUN ?= 0
 
 # Flags
+CC := avr-gcc
 CFLAGS := -std=c99 -Wall -Wextra -Wpedantic -Os -mmcu=$(MCU) -I./include
 ifeq (${SHADOWRUN}, 1)
 VARIANT := shadowrun
@@ -41,11 +42,11 @@ $(EXEC).hex: $(EXEC)
 	avr-objcopy -O ihex -j .text -j .data $< $@
 
 $(EXEC): $(OBJS)
-	avr-gcc $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c $(HDRS)
 	@mkdir -p $(BUILDDIR)
-	avr-gcc $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 docs:
 	doxygen Doxyfile

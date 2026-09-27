@@ -54,18 +54,21 @@
 #include "util.h"
 #include "rand.h"
 #include "ui.h"
+#include "queue.h"
 
 /**
  * Application entry point.
  *
  * Initializes the random generator, GPIO, game configuration and LCD,
- * displays the home screen and then puts the CPU to sleep. The CPU
- * wakes on every encoder step or button press, which are handled by
- * the GPIO interrupt handlers.
+ * displays the home screen and then loops draining a queue of input
+ * events into the user interface, sleeping the CPU between events.
+ * The GPIO interrupt handlers queue encoder steps and button presses;
+ * the CPU wakes on an interrupt to process them.
  */
 int main(void)
 {
     rand_init();
+    queue_init();
     gpio_init();
     _delay_ms(10.0);
     config_init();
@@ -77,12 +80,18 @@ int main(void)
     // Show the home screen
     ui_home();
 
-    // Sleep the CPU until an interrupt (encoder or button) wakes it
-    // Idle mode keeps the timer and peripherals running so entropy
-    // collection and delays keep working while the CPU is asleep
+    // Drain queued input events into the UI, then sleep the CPU until
+    // an interrupt (encoder or button) wakes it. Idle mode keeps the
+    // timer and peripherals running so entropy collection and delays
+    // keep working while the CPU is asleep
     set_sleep_mode(SLEEP_MODE_IDLE);
+    UIInput input;
     while (1)
     {
+        while (queue_pop(&input))
+        {
+            ui_manager(input);
+        }
         sleep_mode();
     }
 }
