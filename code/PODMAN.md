@@ -12,10 +12,10 @@ This directory ships a `Containerfile` that packages the whole AVR toolchain (`a
 From this directory:
 
 ```bash
-# Standard firmware build -> build/attiny4313-standard/ttrpg9000_v1.3.hex
+# Standard firmware build -> build/attiny4313-standard/ttrpg9000_v1.4.hex
 ./container.sh build
 
-# Shadowrun firmware build -> build/attiny4313-shadowrun/ttrpg9000_v1.3.hex
+# Shadowrun firmware build -> build/attiny4313-shadowrun/ttrpg9000_v1.4.hex
 ./container.sh shadowrun
 
 # API documentation -> docs/html/index.html
